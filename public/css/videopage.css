@@ -1,0 +1,29 @@
+body {
+    background-image: url('../images/background.png');
+}
+
+main {
+    display: flex;
+    flex-direction: row;
+}
+
+.filter-section {
+    background-color: aqua;
+    width: 20vw;
+    height: auto;
+}
+
+.filter-content {
+    padding-left: 2em;
+}
+
+.category-button{
+    display: flex;
+    flex-direction: row;
+}
+
+.video-section {
+    background-color: brown;
+    width: 80vw;
+    height: auto;
+}
