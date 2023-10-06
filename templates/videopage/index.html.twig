@@ -5,6 +5,7 @@
 
 {% block style_add %}
 	<link rel="stylesheet" href="{{asset('css/videopage.css')}}">
+	<link rel="stylesheet" href="{{asset('css/videocard.css')}}">
 {% endblock %}
 
 {% block header %}
@@ -17,9 +18,9 @@
 			<div class="filter-content">
 				<h3>Système de tags</h3>
 
-				<div>
+				<div class="tag-content">
 					<p>Tags de catégories</p>
-					<input type="text" placeholder="guide, combo, perso..."/>
+					<input type="text" placeholder="Guide, combo, perso..."/>
 					<ul class="category-button">
 						<li>
 							<button href="#">Guide</button>
@@ -30,11 +31,14 @@
 						<li>
 							<button href="#">Persos</button>
 						</li>
+						<li>
+							<button href="#">Joueurs</button>
+						</li>
 					</ul>
 				</div>
-				<div>
+				<div class="tag-content">
 					<p>Tags par auteurs</p>
-					<input type="text" placeholder="crimson, valmaster..."/>
+					<input type="text" placeholder="Mr.Crimson, Valmaster..."/>
 					<ul class="category-button">
 						<li>
 							<button href="#">Mr.Crimson</button>
@@ -47,7 +51,7 @@
 						</li>
 					</ul>
 				</div>
-				<div>
+				<div class="tag-content">
 					<p>Version du jeu</p>
 					<input type="text" placeholder="Current, ..."/>
 					<ul class="category-button">
@@ -62,11 +66,27 @@
 			<div class="video-content">
 				<h3>Système de filtre</h3>
 
-                <div class="video-list">
-                    {% block videoCard %}
-                        {% include "videocard.html.twig" %}
-                    {% endblock %}
-                </div>
+				<div class="video-list">
+					{% block videoCard %}
+						{% for video in videos %}
+							<div class="video-card">
+								<iframe width="320" height="180" src={{video.videolink}}></iframe>
+								<h2 class="video-title">{{video.videotitle}}</h2>
+								<ul class="video-tags">
+									{% for tag in video.videotags %}
+										<li>{{tag}}</li>
+									{% endfor %}
+
+
+								</ul>
+								<p class="video-author">Auteur de la vidéo</p>
+								<p class="video-views">1 000 000 vues</p>
+							</div>
+
+						{% endfor %}
+						{# {% include "videocard.html.twig" %} #}
+					{% endblock %}
+				</div>
 
 			</div>
 		</section>

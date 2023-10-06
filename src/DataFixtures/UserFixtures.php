@@ -19,9 +19,13 @@ class UserFixtures extends Fixture
 
         for($i=0; $i < 10; $i++){
             $users[$i] = new User();
+            $users[$i]->setUsername($faker->userName);
+            $users[$i]->setPassword($faker->password());
+            $users[$i]->setEmail($faker->email);
+            $users[$i]->setUserProfilePicture('');
+            $manager->persist($users[$i]);
         }
 
-        // $manager->persist($product);
 
         $manager->flush();
     }
