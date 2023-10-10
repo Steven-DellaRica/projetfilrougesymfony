@@ -1,0 +1,26 @@
+{% block style_add %}
+	<link rel="stylesheet" href="{{asset('css/videocard.css')}}">
+{% endblock %}
+
+{% block videoCard %}
+	<div class="video-card">
+		<iframe width="420" height="236" src="https://www.youtube.com/embed/{{video.videoid}}" frameborder="0" allowfullscreen></iframe>
+		<div class="video-card-core">
+			<div>
+				<img class="video-profile-picture" src="{{asset('images/pngegg.png')}}" alt="User profile picture"/>
+			</div>
+			<div>
+				<h2 class="video-title">{{video.videotitle}}</h2>
+			</div>
+		</div>
+		<div class="video-card-tags-infos">
+			<ul class="video-tags">
+				{% for tag in video.videotags %}
+					<li>{{tag}}</li>
+				{% endfor %}
+			</ul>
+			<p class="video-author">{{video.videoauthor}}</p>
+			<p class="video-views">{{video.videoviews}}</p>
+		</div>
+	</div>
+{% endblock %}

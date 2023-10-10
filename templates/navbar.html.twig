@@ -1,29 +1,35 @@
+{% block style_add %}
+	<link rel="stylesheet" href="{{asset('css/navbar.css')}}">
+{% endblock %}
+
 {% block header %}
-	<nav>
-		<div class="navbar-container">
-			<div class="navbar-left">
-				<img class="navbar-logo" href="#" src="{{asset('images/SF6Logo.png')}}" alt="Accueil Adrar"/>
-				<a href='#'><p>Tournois</p></a>
-				<a href='#'><p>Créateurs</p></a>
-				<a href='#'><p>Vidéos</p></a>
+	<nav class="navbar">
+		<div class="navbar-leftside">
+			<div class="navbar-logo">
+				<img src="{{asset('images/SF6Logo.png')}}" href="#" alt="Logo">
 			</div>
+			<ul class="navbar-links">
+				<li>
+					<a href="#">Tournois</a>
+				</li>
+				<li>
+					<a href="#">Créateur</a>
+				</li>
+				<li>
+					<a href="#">Vidéos</a>
+				</li>
+			</ul>
+		</div>
 
-			<div class="navbar-center">
-
-				<div class="form">
-					<span class="icon">
-						<img class="fas" src="{{asset('images/glass.png')}}"/>
-					</span>
-					<div class="form-group">
-						<input type="text" class="search-input" placeholder="Type to search">
-						{# <button type="submit" class="navbar-search"><img src="{{asset('images/magnifying-glass-solid.png')}}"/></button> #}
-					</div>
-				</div>
+		<div class="navbar-central">
+			<div class="navbar-search">
+                <button><img src="{{asset('images/glass.png')}}"></button>
+				<input type="text" placeholder="Rechercher...">
 			</div>
-
-			<div class="navbar-right">
-				<form action=""></form>
-				<button class="navbar-connect">Se connecter</button>
+		</div>
+		<div class="navbar-rightside">
+			<div class="navbar-login">
+				<a href="#">Se Connecter</a>
 			</div>
 		</div>
 	</nav>
