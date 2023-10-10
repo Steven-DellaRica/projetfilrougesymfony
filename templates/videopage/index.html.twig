@@ -69,22 +69,8 @@
 				<div class="video-list">
 					{% block videoCard %}
 						{% for video in videos %}
-							<div class="video-card">
-								<iframe width="320" height="180" src={{video.videolink}}></iframe>
-								<h2 class="video-title">{{video.videotitle}}</h2>
-								<ul class="video-tags">
-									{% for tag in video.videotags %}
-										<li>{{tag}}</li>
-									{% endfor %}
-
-
-								</ul>
-								<p class="video-author">Auteur de la vidéo</p>
-								<p class="video-views">1 000 000 vues</p>
-							</div>
-
+							{% include "videopage/_videocard.html.twig" %}
 						{% endfor %}
-						{# {% include "videocard.html.twig" %} #}
 					{% endblock %}
 				</div>
 

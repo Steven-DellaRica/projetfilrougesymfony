@@ -14,10 +14,10 @@ class Videos
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $video_link = null;
+    #[ORM\Column(length: 50)]
+    private ?string $video_id = null;
 
-    #[ORM\Column(length: 30)]
+    #[ORM\Column(length: 100)]
     private ?string $video_title = null;
 
     #[ORM\Column(type: Types::ARRAY)]
@@ -35,19 +35,22 @@ class Videos
     #[ORM\Column(length: 255)]
     private ?string $video_thumbnail = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $video_timecode = null;
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getVideoLink(): ?string
+    public function getVideoId(): ?string
     {
-        return $this->video_link;
+        return $this->video_id;
     }
 
-    public function setVideoLink(string $video_link): static
+    public function setVideoId(string $video_id): static
     {
-        $this->video_link = $video_link;
+        $this->video_id = $video_id;
 
         return $this;
     }
@@ -120,6 +123,18 @@ class Videos
     public function setVideoThumbnail(string $video_thumbnail): static
     {
         $this->video_thumbnail = $video_thumbnail;
+
+        return $this;
+    }
+
+    public function getVideoTimecode(): ?int
+    {
+        return $this->video_timecode;
+    }
+
+    public function setVideoTimecode(?int $video_timecode): static
+    {
+        $this->video_timecode = $video_timecode;
 
         return $this;
     }

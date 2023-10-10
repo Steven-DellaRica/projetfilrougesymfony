@@ -1,25 +1,48 @@
 .video-card {
-    width: 300px;
-    border: 1px solid #ddd;
+    width: 420px;
+    background-color: #D27A34;
+    border-radius: 5px;
     padding: 10px;
     margin: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     text-align: left;
 }
 
-.video-card img {
-    max-width: 100%;
+.video-card-core {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.video-card iframe {
+    border-radius: 5px;
+}
+
+.video-profile-picture {
+    margin-top: 10px;
+    margin-right: 10px;
+    width: 30px;
     height: auto;
 }
 
 .video-title {
     font-size: 18px;
-    margin: 10px 0;
+    margin-top: 10px;
+    color: black;
+    font-weight: 600;
+}
+
+.video-card-tags-infos {
+    align-self: left;
+    margin-left: 1.4em;
 }
 
 .video-tags {
     list-style: none;
-    padding: 0;
-    margin: 0;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
 }
 
 .video-tags li {
@@ -32,7 +55,8 @@
 
 .video-author {
     font-style: italic;
-    color: #888;
+    color: black;
+    margin-bottom: 0.4em;
 }
 
 .video-views {

@@ -21,16 +21,18 @@ class VideoFixtures extends Fixture
             $videos[$i] = new Videos();
         }
 
-        $videos[0]->setVideoLink('https://www.youtube.com/watch?v=dQw4w9WgXcQ');
-        $videos[1]->setVideoLink('https://www.youtube.com/watch?v=aAQZPBwz2CI');
-        $videos[2]->setVideoLink('https://www.youtube.com/watch?v=dc90LaUcD4c');
-        $videos[3]->setVideoLink('https://www.youtube.com/watch?v=3mnR8Ew7NNY');
-        $videos[4]->setVideoLink('https://www.youtube.com/watch?v=6MXD33uiBhA');
-        $videos[5]->setVideoLink('https://www.youtube.com/watch?v=my4a2SJQ-g8');
-        $videos[6]->setVideoLink('https://www.youtube.com/watch?v=W1gfD0QwzXE');
-        $videos[7]->setVideoLink('https://www.youtube.com/watch?v=kmow2QDr25w');
-        $videos[8]->setVideoLink('https://www.youtube.com/watch?v=wB5J7UF7OYY');
-        $videos[9]->setVideoLink('https://www.youtube.com/watch?v=gX4qMOgEmxg');
+        //https://www.youtube.com/watch?v=*Video.id*
+
+        $videos[0]->setVideoId('dQw4w9WgXcQ');
+        $videos[1]->setVideoId('aAQZPBwz2CI');
+        $videos[2]->setVideoId('dc90LaUcD4c');
+        $videos[3]->setVideoId('3mnR8Ew7NNY');
+        $videos[4]->setVideoId('6MXD33uiBhA');
+        $videos[5]->setVideoId('my4a2SJQ-g8');
+        $videos[6]->setVideoId('W1gfD0QwzXE');
+        $videos[7]->setVideoId('kmow2QDr25w');
+        $videos[8]->setVideoId('wB5J7UF7OYY');
+        $videos[9]->setVideoId('gX4qMOgEmxg');
         
         $videos[0]->setVideoTitle('Rick Astley - Never Gonna Give You Up (Official Music Video)');
         $videos[1]->setVideoTitle('Madonna - 4 Minutes feat. Justin Timberlake & Timbaland (Official Video) [4K]');
@@ -40,7 +42,7 @@ class VideoFixtures extends Fixture
         $videos[5]->setVideoTitle("Le top 8 la Saltmine League s'affronte");
         $videos[6]->setVideoTitle("C'est un echec... World Warrior France #2");
         $videos[7]->setVideoTitle('Le PARRY, mauvaise mécanique ? #SF6');
-        $videos[8]->setVideoTitle('Ce mec est encoresur ma route... Dernière Saltmine d...');
+        $videos[8]->setVideoTitle('Ce mec est encore sur ma route... Dernière Saltmine d...');
         $videos[9]->setVideoTitle('Challenge : Deux tournois deux personnages !');
 
         $videos[0]->setVideoThumbnail('https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg');
