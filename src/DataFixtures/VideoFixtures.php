@@ -5,8 +5,7 @@ namespace App\DataFixtures;
 use App\Entity\Videos;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use Faker\Factory;
-;
+use Faker\Factory;;
 
 class VideoFixtures extends Fixture
 {
@@ -17,7 +16,7 @@ class VideoFixtures extends Fixture
 
         $videos = array();
 
-        for($i=0; $i < 10; $i++){
+        for ($i = 0; $i < 10; $i++) {
             $videos[$i] = new Videos();
         }
 
@@ -33,7 +32,7 @@ class VideoFixtures extends Fixture
         $videos[7]->setVideoId('kmow2QDr25w');
         $videos[8]->setVideoId('wB5J7UF7OYY');
         $videos[9]->setVideoId('gX4qMOgEmxg');
-        
+
         $videos[0]->setVideoTitle('Rick Astley - Never Gonna Give You Up (Official Music Video)');
         $videos[1]->setVideoTitle('Madonna - 4 Minutes feat. Justin Timberlake & Timbaland (Official Video) [4K]');
         $videos[2]->setVideoTitle('Je FT10 le meilleur Guile Chinois !');
@@ -56,7 +55,7 @@ class VideoFixtures extends Fixture
         $videos[8]->setVideoThumbnail('https://img.youtube.com/vi/wB5J7UF7OYY/hqdefault.jpg');
         $videos[9]->setVideoThumbnail('https://img.youtube.com/vi/gX4qMOgEmxg/hqdefault.jpg');
 
-        for($i = 0; $i < 10; $i++){
+        for ($i = 0; $i < 10; $i++) {
             $videos[$i]->setVideoTags($faker->words(3));
             $videos[$i]->setVideoAuthor('M.Crimson');
             $videos[$i]->setVideoViews($faker->randomNumber(6, false));

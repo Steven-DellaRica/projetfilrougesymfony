@@ -5,9 +5,7 @@ namespace App\DataFixtures;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use Faker\Factory;
-
-;
+use Faker\Factory;;
 
 class UserFixtures extends Fixture
 {
@@ -17,7 +15,7 @@ class UserFixtures extends Fixture
 
         $users = array();
 
-        for($i=0; $i < 10; $i++){
+        for ($i = 0; $i < 10; $i++) {
             $users[$i] = new User();
             $users[$i]->setUsername($faker->userName);
             $users[$i]->setPassword($faker->password());

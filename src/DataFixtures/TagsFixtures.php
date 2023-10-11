@@ -4,8 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Tags;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Persistence\ObjectManager;
-;
+use Doctrine\Persistence\ObjectManager;;
 
 class TagsFixtures extends Fixture
 {
@@ -13,7 +12,7 @@ class TagsFixtures extends Fixture
     {
         $tags = array();
 
-        for($i=0; $i < 10; $i++){
+        for ($i = 0; $i < 23; $i++) {
             $tags[$i] = new Tags();
         }
 
@@ -37,12 +36,12 @@ class TagsFixtures extends Fixture
         $tags[17]->setTagsLibelle('Manon');
         $tags[18]->setTagsLibelle('Marisa');
         $tags[19]->setTagsLibelle('Rashid');
-        $tags[21]->setTagsLibelle('Ryu');
-        $tags[22]->setTagsLibelle('Zangief');
-        
-        // $product = new Product();
-        // $manager->persist($product);
+        $tags[20]->setTagsLibelle('Ryu');
+        $tags[21]->setTagsLibelle('Zangief');
 
+        for ($i = 0; $i < 22; $i++) {
+            $manager->persist($tags[$i]);
+        }
         $manager->flush();
     }
 }

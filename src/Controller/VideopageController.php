@@ -50,7 +50,7 @@ class VideopageController extends AbstractController
         // dd($videoInfo);
 
         return $this->render('videopage/index.html.twig', [
-            'videos' => $videosArray,
+            // 'videos' => $videosArray,
         ]);
     }
 }
