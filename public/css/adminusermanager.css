@@ -42,3 +42,8 @@ td.User_profile_picture img {
     max-height: 100px;
     border-radius: 50%;
 }
+
+.admin-new-back-buttons {
+    display: flex;
+    justify-content: center;
+}

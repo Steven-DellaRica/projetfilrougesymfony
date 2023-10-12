@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Videos index{% endblock %}
+{% block title %}Videos index
+{% endblock %}
 
 {% block style_add %}
 	<link rel="stylesheet" href="{{asset('css/adminusermanager.css')}}">
@@ -11,48 +12,54 @@
 {% endblock %}
 
 {% block body %}
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Video_id</th>
-                <th>Video_title</th>
-                <th>Video_tags</th>
-                <th>Video_author</th>
-                <th>Video_views</th>
-                <th>Video_date</th>
-                <th>Video_thumbnail</th>
-                <th>Video_timecode</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for video in videos %}
-            <tr>
-                <td>{{ video.id }}</td>
-                <td>{{ video.videoId }}</td>
-                <td>{{ video.videoTitle }}</td>
-                <td>{{ video.videoTags ? video.videoTags|join(', ') : '' }}</td>
-                <td>{{ video.videoAuthor }}</td>
-                <td>{{ video.videoViews }}</td>
-                <td>{{ video.videoDate ? video.videoDate|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ video.videoThumbnail }}</td>
-                <td>{{ video.videoTimecode }}</td>
-                <td>
-                    <a href="{{ path('app_videos_show', {'id': video.id}) }}">show</a>
-                    <a href="{{ path('app_videos_edit', {'id': video.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="10">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Id</th>
+				<th>Video_id</th>
+				<th>Video_title</th>
+				<th>Video_tags</th>
+				<th>Video_author</th>
+				<th>Video_views</th>
+				<th>Video_date</th>
+				<th>Video_thumbnail</th>
+				<th>Video_timecode</th>
+				<th>actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for video in videos %}
+				<tr>
+					<td>{{ video.id }}</td>
+					<td>{{ video.videoId }}</td>
+					<td>{{ video.videoTitle }}</td>
+					<td>{{ video.videoTags ? video.videoTags|join(', ') : '' }}</td>
+					<td>{{ video.videoAuthor }}</td>
+					<td>{{ video.videoViews }}</td>
+					<td>{{ video.videoDate ? video.videoDate|date('Y-m-d H:i:s') : '' }}</td>
+					<td>{{ video.videoThumbnail }}</td>
+					<td>{{ video.videoTimecode }}</td>
+					<td>
+						<a href="{{ path('app_videos_show', {'id': video.id}) }}">show</a>
+						<a href="{{ path('app_videos_edit', {'id': video.id}) }}">edit</a>
+					</td>
+				</tr>
+			{% else %}
+				<tr>
+					<td colspan="10">no records found</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
 
-    <a href="{{ path('app_videos_new') }}">Create new</a>
-    <a href="{{ path('app_adminpage') }}">Back</a>
+	<div class="admin-new-back-buttons">
+		<a href="{{ path('app_videos_new') }}">
+			<button>Create new</button>
+		</a>
+		<a href="{{ path('app_adminpage') }}">
+			<button>Back</button>
+		</a>
+	</div>
 
-    {{ include('adminpage/_backToWebsiteButton.html.twig') }}
+	{{ include('adminpage/_backToWebsiteButton.html.twig') }}
 {% endblock %}
