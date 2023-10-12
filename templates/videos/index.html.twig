@@ -2,9 +2,15 @@
 
 {% block title %}Videos index{% endblock %}
 
-{% block body %}
-    <h1>Videos index</h1>
+{% block style_add %}
+	<link rel="stylesheet" href="{{asset('css/adminusermanager.css')}}">
+{% endblock %}
 
+{% block header %}
+	{% include "adminpage/_adminheader.html.twig" %}
+{% endblock %}
+
+{% block body %}
     <table class="table">
         <thead>
             <tr>
@@ -46,4 +52,7 @@
     </table>
 
     <a href="{{ path('app_videos_new') }}">Create new</a>
+    <a href="{{ path('app_adminpage') }}">Back</a>
+
+    {{ include('adminpage/_backToWebsiteButton.html.twig') }}
 {% endblock %}

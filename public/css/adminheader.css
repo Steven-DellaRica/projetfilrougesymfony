@@ -6,7 +6,7 @@
 
 .admin-header h1 {
     font-size: 64px;
-    margin: 1em 0;
+    margin: 0.3em 0;
 }
 
 .admin-header h3 {
@@ -25,6 +25,21 @@
 
 .admin-category a {
     text-decoration: none;
-    color: black;
-    border: 2px solid green;
+    padding: 0.1em;
+    color: rgb(0, 119, 255);
+    border: 2px solid rgb(0, 119, 255);
+    border-radius: 10px;
+    font-size: 24px;
+}
+
+.admin-category a:hover {
+    color: rgb(0, 86, 184);
+    border: 2px solid rgb(0, 86, 184);
+}
+
+.admin-back-button {
+    margin-top: 2em;
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
 }
