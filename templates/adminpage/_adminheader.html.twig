@@ -1,0 +1,17 @@
+{% block style_add %}
+	<link rel="stylesheet" href="{{asset('css/adminheader.css')}}">
+{% endblock %}
+
+{% block header %}
+	<header class="admin-header">
+		<h1>Bienvenue Admin</h1>
+
+		<h3>Que voulez vous manipuler ?</h3>
+
+		<div class="admin-category">
+			<a class="" href="{{path('app_user_index')}}">Users</a>
+			<a class="" href="{{path('app_videos_index')}}">Videos</a>
+			<a class="" href="{{path('app_tags_index')}}">Tags</a>
+		</div>
+	</header>
+{% endblock %}

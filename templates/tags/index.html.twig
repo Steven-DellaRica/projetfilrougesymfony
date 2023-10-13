@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tags index{% endblock %}
+
+{% block style_add %}
+	<link rel="stylesheet" href="{{asset('css/adminusermanager.css')}}">
+{% endblock %}
+
+{% block header %}
+	{% include "adminpage/_adminheader.html.twig" %}
+{% endblock %}
+
+{% block body %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Tags_libelle</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for tag in tags %}
+            <tr>
+                <td>{{ tag.id }}</td>
+                <td>{{ tag.tagsLibelle }}</td>
+                <td>
+                    <a href="{{ path('app_tags_show', {'id': tag.id}) }}">show</a>
+                    <a href="{{ path('app_tags_edit', {'id': tag.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+	<div class="admin-new-back-buttons">
+		<a href="{{ path('app_tags_new') }}">
+			<button>Create new</button>
+		</a>
+		<a href="{{ path('app_adminpage') }}">
+			<button>Back</button>
+		</a>
+	</div>
+
+    {{ include('adminpage/_backToWebsiteButton.html.twig') }}
+{% endblock %}
