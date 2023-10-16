@@ -63,11 +63,15 @@
     border-radius: 0px 5px 5px 0px;
 }
 
+.navbar-connectbutton {
+    margin-right: 2em;
+}
+
 .navbar-login a {
     background-color: #007BFF;
     color: #fff;
     font-family: 'Roboto', sans-serif;
-    margin-right: 5em;
+    margin-right: 1em;
     padding: 8px 16px;
     border-radius: 5px;
     text-decoration: none;

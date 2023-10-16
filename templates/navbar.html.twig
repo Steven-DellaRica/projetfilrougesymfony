@@ -19,23 +19,31 @@
 					<a href="#">Vidéos</a>
 				</li>
 				{% if is_granted('ROLE_ADMIN') %}
-				<li>
-					<a href="{{path('app_adminpage')}}">Admin</a>
-				</li>
+					<li>
+						<a href="{{path('app_adminpage')}}">Admin</a>
+					</li>
 				{% endif %}
 			</ul>
 		</div>
 
 		<div class="navbar-central">
 			<div class="navbar-search">
-                <button><img src="{{asset('images/glass.png')}}"></button>
+				<button><img src="{{asset('images/glass.png')}}"></button>
 				<input type="text" placeholder="Rechercher...">
 			</div>
 		</div>
 		<div class="navbar-rightside">
 			<div class="navbar-login">
 				{% if not is_granted('ROLE_USER') %}
-				<a href="#">Se Connecter</a>
+					<div class="navbar-connectbutton">
+						<a href="{{path('app_login')}}">Se Connecter</a>
+						<a href="{{path('app_register')}}">S'inscrire</a>
+					</div>
+				{% else %}
+					<div class="navbar-connectbutton">
+						<a href="#">{{ app.user.username}}</a>
+						<a href="{{path('app_logout')}}">Se déconnecter</a>
+					</div>
 				{% endif %}
 			</div>
 		</div>
