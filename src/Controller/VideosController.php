@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Tags;
 use App\Entity\Videos;
 use App\Form\VideosType;
 use App\Repository\VideosRepository;
@@ -16,7 +17,7 @@ class VideosController extends AbstractController
 {
     #[Route('/', name: 'app_videos_index', methods: ['GET'])]
     public function index(VideosRepository $videosRepository): Response
-    {
+    {        
         return $this->render('videos/index.html.twig', [
             'videos' => $videosRepository->findAll(),
         ]);

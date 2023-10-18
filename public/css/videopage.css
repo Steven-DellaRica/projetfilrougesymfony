@@ -96,9 +96,3 @@ main {
     flex-flow: row wrap;
     /* justify-content: center; */
 }
-
-.twitter-tweet {
-    color: red;
-    width: 420px;
-    height: auto;
-}

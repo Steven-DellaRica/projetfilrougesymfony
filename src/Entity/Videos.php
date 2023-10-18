@@ -3,8 +3,13 @@
 namespace App\Entity;
 
 use App\Repository\VideosRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\InverseJoinColumn;
+use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\JoinTable;
 
 #[ORM\Entity(repositoryClass: VideosRepository::class)]
 class Videos
@@ -20,9 +25,6 @@ class Videos
     #[ORM\Column(length: 100)]
     private ?string $video_title = null;
 
-    #[ORM\Column(type: Types::ARRAY)]
-    private array $video_tags = [];
-
     #[ORM\Column(length: 30)]
     private ?string $video_author = null;
 
@@ -37,6 +39,17 @@ class Videos
 
     #[ORM\Column(nullable: true)]
     private ?int $video_timecode = null;
+
+    #[JoinTable(name: 'videos_tags')]
+    #[JoinColumn(name:'video_id', referencedColumnName: 'id')]
+    #[InverseJoinColumn(name:'tag_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: Tags::class, inversedBy: 'videos')]
+    private Collection $tags;
+
+    public function __construct()
+    {
+        $this->tags = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -63,18 +76,6 @@ class Videos
     public function setVideoTitle(string $video_title): static
     {
         $this->video_title = $video_title;
-
-        return $this;
-    }
-
-    public function getVideoTags(): array
-    {
-        return $this->video_tags;
-    }
-
-    public function setVideoTags(array $video_tags): static
-    {
-        $this->video_tags = $video_tags;
 
         return $this;
     }
@@ -135,6 +136,30 @@ class Videos
     public function setVideoTimecode(?int $video_timecode): static
     {
         $this->video_timecode = $video_timecode;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Tags>
+     */
+    public function getTags(): Collection
+    {
+        return $this->tags;
+    }
+
+    public function addTag(Tags $tag): static
+    {
+        if (!$this->tags->contains($tag)) {
+            $this->tags->add($tag);
+        }
+
+        return $this;
+    }
+
+    public function removeTag(Tags $tag): static
+    {
+        $this->tags->removeElement($tag);
 
         return $this;
     }
