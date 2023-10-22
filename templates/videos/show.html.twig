@@ -21,7 +21,11 @@
             </tr>
             <tr>
                 <th>Video_tags</th>
-                <td>{{ video.videoTags ? video.videoTags|join(', ') : '' }}</td>
+                {# <td>{{ video.Tags ? video.Tags|join(', ') : '' }}</td> #}
+                {# {{dump(tags)}} #}
+                {% for tags in video.tags %}
+                    <td>{{tags.tagslibelle}}</td>
+                {% endfor %}
             </tr>
             <tr>
                 <th>Video_author</th>

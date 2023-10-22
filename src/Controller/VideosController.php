@@ -31,6 +31,13 @@ class VideosController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $datas = $form->get('tags')->getData();
+
+            for ($i=0; $i < count($datas) ; $i++) {
+                $video->addTag($datas[$i]);
+            }
+            
             $entityManager->persist($video);
             $entityManager->flush();
 
@@ -58,6 +65,13 @@ class VideosController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $datas = $form->get('tags')->getData();
+
+            for ($i=0; $i < count($datas) ; $i++) {
+                $video->addTag($datas[$i]);
+            }
+            $entityManager->persist($video);
             $entityManager->flush();
 
             return $this->redirectToRoute('app_videos_index', [], Response::HTTP_SEE_OTHER);

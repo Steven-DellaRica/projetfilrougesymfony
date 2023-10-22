@@ -1,9 +1,9 @@
 {{ form_start(form) }}
-<form method="post">
+{# <form method="post">
 	<label for="idVideo">Lien de la vidéo: </label>
 	<input type="text" id="idVideo" name="idVideo">
     <input type="submit" value="Rechercher Video"/>
-</form>
+</form> #}
 {{ form_widget(form) }}
 <button class="btn">{{ button_label|default('Save') }}</button>
 {{ form_end(form) }}

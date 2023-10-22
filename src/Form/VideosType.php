@@ -16,12 +16,14 @@ class VideosType extends AbstractType
         $builder
             ->add('video_id')
             ->add('video_title')
-            ->add('tags', EntityType::class, [
+            ->add('tags', EntityType::class, array(
                 'class'=> Tags::class,
                 'choice_label' => 'tags_libelle', 
                 'mapped' => false, 
-                'multiple' => true 
-            ])
+                'multiple' => true,
+                'expanded' => true,
+                'by_reference' => false,
+            ))
             ->add('video_author')
             ->add('video_views')
             ->add('video_date')

@@ -56,7 +56,6 @@ class VideoFixtures extends Fixture
         $videos[9]->setVideoThumbnail('https://img.youtube.com/vi/gX4qMOgEmxg/hqdefault.jpg');
 
         for ($i = 0; $i < 10; $i++) {
-            $videos[$i]->setVideoTags($faker->words(3));
             $videos[$i]->setVideoAuthor('M.Crimson');
             $videos[$i]->setVideoViews($faker->randomNumber(6, false));
             $videos[$i]->setVideoDate($faker->dateTimeThisDecade());

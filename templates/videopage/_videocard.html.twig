@@ -15,9 +15,9 @@
 		</div>
 		<div class="video-card-tags-infos">
 			<ul class="video-tags">
-				{% for tag in video.videotags %}
-					<li>{{tag}}</li>
-				{% endfor %}
+                {% for tags in video.tags %}
+                    <li><a href="#">{{tags.tagslibelle}}</a></li>
+                {% endfor %}
 			</ul>
 			<p class="video-author">{{video.videoauthor}}</p>
 			<p class="video-views">{{video.videoviews}}</p>
