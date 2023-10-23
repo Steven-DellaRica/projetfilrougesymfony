@@ -2,10 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\Tags;
-use App\Entity\Videos;
-use App\Repository\TagsRepository;
-use App\Repository\UserRepository;
 use App\Repository\VideosRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;

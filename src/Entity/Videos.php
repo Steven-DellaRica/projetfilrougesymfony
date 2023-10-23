@@ -156,12 +156,6 @@ class Videos
 
         return $this;
     }
-    // public function setTags(array $tags)
-    // {
-    //     $this->tags = $tags;
-
-    //     return $this;
-    // }
 
     public function removeTag(Tags $tag): static
     {

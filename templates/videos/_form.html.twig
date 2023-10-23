@@ -1,9 +1,16 @@
 {{ form_start(form) }}
-{# <form method="post">
-	<label for="idVideo">Lien de la vidéo: </label>
-	<input type="text" id="idVideo" name="idVideo">
-    <input type="submit" value="Rechercher Video"/>
-</form> #}
-{{ form_widget(form) }}
-<button class="btn">{{ button_label|default('Save') }}</button>
+
+{% if not displayInfos %}
+	{{ form_widget(form) }}
+	<button class="btn">{{ button_label|default('Envoyer') }}</button>
+{% else %}
+	<h3>Informations de la vidéo :</h3>
+	<p>Nom de la vidéo :{{ videoInfos.snippet.title }}</p>
+	<p>Nom de l'auteur :{{ videoInfos.snippet.channelTitle}}</p>
+	<p>Date du post de la vidéo :{{ videoInfos.snippet.publishedAt }}</p>
+	<p>Image de la vidéo :<img src="{{ videoInfos.snippet.thumbnails.high.url }}"/></p>
+	{{ form_widget(form2) }}
+	<button class="btn">{{ button_label|default('Valider') }}</button>
+{% endif %}
+
 {{ form_end(form) }}

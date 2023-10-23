@@ -27,6 +27,7 @@ class UserFixtures extends Fixture
         $users[1]->setEmail($faker->email);
         $users[1]->setUserProfilePicture('');
         $manager->persist($users[1]);
+        
         for ($i = 2; $i < 10; $i++) {
             $users[$i] = new User();
             $users[$i]->setUsername($faker->userName);
