@@ -33,6 +33,11 @@
 					<td>{{ video.id }}</td>
 					<td>{{ video.videoId }}</td>
 					<td>{{ video.videoTitle }}</td>
+					<td>
+						{% for tags in video.tags %}
+							<a href="#">{{tags.tagslibelle}}</a>
+						{% endfor %}
+					</td>
 					<td>{{ video.videoAuthor }}</td>
 					<td>{{ video.videoViews }}</td>
 					<td>{{ video.videoDate ? video.videoDate|date('Y-m-d H:i:s') : '' }}</td>
