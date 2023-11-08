@@ -9,7 +9,6 @@ use App\Form\VideoTagsType;
 use App\Repository\VideosRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-use phpseclib3\File\ASN1\Maps\IssuerAltName;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -73,45 +72,6 @@ class VideosController extends AbstractController
         return false;
     }
 
-
-    //     /**
-    //  * Get Youtube video ID from URL
-    //  *
-    //  * @param string $url
-    //  * @return mixed Youtube video ID or FALSE if not found
-    //  */
-    // function getYoutubeIdFromUrl($url) {
-    //     $parts = parse_url($url);
-    //     if(isset($parts['query'])){
-    //         parse_str($parts['query'], $qs);
-    //         if(isset($qs['v'])){
-    //             return $qs['v'];
-    //         }else if(isset($qs['vi'])){
-    //             return $qs['vi'];
-    //         }
-    //     }
-    //     if(isset($parts['path'])){
-    //         $path = explode('/', trim($parts['path'], '/'));
-    //         return $path[count($path)-1];
-    //     }
-    //     return false;
-    // }
-    // // Test
-    // $urls = array(
-    //     'http://youtube.com/v/dQw4w9WgXcQ?feature=youtube_gdata_player',
-    //     'http://youtube.com/vi/dQw4w9WgXcQ?feature=youtube_gdata_player',
-    //     'http://youtube.com/?v=dQw4w9WgXcQ&feature=youtube_gdata_player',
-    //     'http://www.youtube.com/watch?v=dQw4w9WgXcQ&feature=youtube_gdata_player',
-    //     'http://youtube.com/?vi=dQw4w9WgXcQ&feature=youtube_gdata_player',
-    //     'http://youtube.com/watch?v=dQw4w9WgXcQ&feature=youtube_gdata_player',
-    //     'http://youtube.com/watch?vi=dQw4w9WgXcQ&feature=youtube_gdata_player',
-    //     'http://youtu.be/dQw4w9WgXcQ?feature=youtube_gdata_player'
-    // );
-    // foreach($urls as $url){
-    //     echo $url . ' : ' . getYoutubeIdFromUrl($url) . "\n";
-    // }
-
-
     #[Route('/', name: 'app_videos_index', methods: ['GET'])]
     public function index(VideosRepository $videosRepository): Response
     {
@@ -132,44 +92,85 @@ class VideosController extends AbstractController
         $form = $this->createForm(VideoIDType::class, $video);
         $form2 = $this->createForm(VideoTagsType::class, $video);
         $form->handleRequest($request);
-
+        
         if ($form->isSubmitted() && $form->isValid()) {
-
             $url = $form->get('video_id')->getData();
-
             $videoID = $this->getYoutubeIdFromUrl($url);
-
+            
             if (isset($videoID) != false) {
                 $displayInfos = true;
                 $videoInfos = $this->getYoutubeInfos($videoID);
                 $this->setYoutubeInfos($video, $videoInfos);
-
-                $form2->handleRequest($request);
-
-                //https://symfony.com/doc/current/form/multiple_buttons.html
-        
-                if ($form2->isSubmitted() && $form2->isValid()) {
-        
-                    $datas = $form2->get('tags')->getData();
-        
-                    for ($i = 0; $i < count($datas); $i++) {
-                        $video->addTag($datas[$i]);
-                    }
-        
-                    dd($video);
-        
-                    $entityManager->persist($video);
-                    $entityManager->flush();
-        
-                    return $this->redirectToRoute('app_videos_index', [], Response::HTTP_SEE_OTHER);
-                }
+                
+                $entityManager->persist($video);
+                $entityManager->flush();
             } else {
                 //Handle if return false
                 $errorBool = true;
                 $errorMsg = 'Le lien de la vidéo n\'est pas valide';
-                return $this->redirectToRoute('app_videos_index', [], Response::HTTP_SEE_OTHER);
+                return $this->redirectToRoute('app_videos_new', [], Response::HTTP_SEE_OTHER);
             }
+        } else {
+            // Handle fail form submit
         }
+        
+        $form2->handleRequest($request);
+
+        if ($form2->isSubmitted() && $form2->isValid()) {
+            $datas = $form2->get('tags')->getData();
+
+            for ($i = 0; $i < count($datas); $i++) {
+                $video->addTag($datas[$i]);
+            }
+
+
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_videos_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        // if ($form->isSubmitted() && $form->isValid()) {
+
+        //     $url = $form->get('video_id')->getData();
+
+        //     $videoID = $this->getYoutubeIdFromUrl($url);
+
+
+        //     if (isset($videoID) != false) {
+        //         $displayInfos = true;
+        //         $videoInfos = $this->getYoutubeInfos($videoID);
+        //         $this->setYoutubeInfos($video, $videoInfos);
+
+        //         $form2->handleRequest($request);
+
+        //         //https://symfony.com/doc/current/form/multiple_buttons.html
+
+        //         if ($form2->isSubmitted() && $form2->isValid()) {
+
+        //             $datas = $form2->get('tags')->getData();
+
+        //             for ($i = 0; $i < count($datas); $i++) {
+        //                 $video->addTag($datas[$i]);
+        //             }
+
+        //             dd($video);
+
+        //             $entityManager->persist($video);
+        //             $entityManager->flush();
+
+        //             return $this->redirectToRoute('app_videos_index', [], Response::HTTP_SEE_OTHER);
+        //         } else {
+        //             dd('Va niquer tes grand morts');
+        //             $errorBool = true;
+        //             $errorMsg = 'Le 2eme formulaire n\'est pas valide';
+        //         }
+        //     } else {
+        //         //Handle if return false
+        //         $errorBool = true;
+        //         $errorMsg = 'Le lien de la vidéo n\'est pas valide';
+        //         return $this->redirectToRoute('app_videos_new', [], Response::HTTP_SEE_OTHER);
+        //     }
+        // }
 
         return $this->render('videos/new.html.twig', [
             'displayInfos' => $displayInfos,
@@ -177,8 +178,8 @@ class VideosController extends AbstractController
             'errorMsg' => $errorMsg,
             'videoInfos' => $videoInfos,
             'video' => $video,
-            'form2' => $form2,
-            'form' => $form,
+            'form' => $form->createView(),
+            'form2' => $form2->createView(),
         ]);
     }
 
