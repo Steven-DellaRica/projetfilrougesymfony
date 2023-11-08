@@ -29,7 +29,7 @@ class Videos
     private ?string $video_author = null;
 
     #[ORM\Column]
-    private ?int $video_views = null;
+    private ?int $video_likes = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $video_date = null;
@@ -92,14 +92,14 @@ class Videos
         return $this;
     }
 
-    public function getVideoViews(): ?int
+    public function getVideoLikes(): ?int
     {
-        return $this->video_views;
+        return $this->video_likes;
     }
 
-    public function setVideoViews(int $video_views): static
+    public function setVideoLikes(int $video_likes): static
     {
-        $this->video_views = $video_views;
+        $this->video_likes = $video_likes;
 
         return $this;
     }

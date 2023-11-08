@@ -1,23 +1,33 @@
-{{ form_start(form) }}
-
 {% if not displayInfos %}
+	{{ form_start(form) }}
 	<div class="videoIdDiv">
 		{{ form_widget(form) }}
-		<button class="btn">{{ button_label|default('Envoyer') }}</button>
+		{% if errorBool %}
+			<div class="Error message">
+				<p>{{errorMsg}}</p>
+			</div>
+		{% endif %}
+		<button class="btn validateButton">{{ button_label|default('Envoyer') }}</button>
 	</div>
+	{{ form_end(form) }}
+
 {% else %}
+	{{ form_start(form2) }}
 	<div class="infoVideoDiv">
 		<h3>Informations de la vidéo :</h3>
 		<div class="attributeInfosDiv">
-			<p class="videoAttribute">Nom de la vidéo : </p>
+			<p class="videoAttribute">Nom de la vidéo :
+			</p>
 			<p>{{ videoInfos.snippet.title }}</p>
 		</div>
 		<div class="attributeInfosDiv">
-			<p class="videoAttribute">Nom de l'auteur : </p>
+			<p class="videoAttribute">Nom de l'auteur :
+			</p>
 			<p>{{ videoInfos.snippet.channelTitle}}</p>
 		</div>
 		<div class="attributeInfosDiv">
-			<p class="videoAttribute">Date du post de la vidéo : </p>
+			<p class="videoAttribute">Date du post de la vidéo :
+			</p>
 			<p>{{ videoInfos.snippet.publishedAt }}</p>
 		</div>
 		<div class="attributeInfosDiv">
@@ -25,8 +35,6 @@
 			<img src="{{ videoInfos.snippet.thumbnails.high.url }}"/>
 		</div>
 		{{ form_widget(form2) }}
-		<button class="btn validateButton">{{ button_label|default('Valider') }}</button>
 	</div>
+	{{ form_end(form2) }}
 {% endif %}
-
-{{ form_end(form) }}
