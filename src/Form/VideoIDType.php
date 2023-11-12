@@ -6,6 +6,8 @@ use App\Entity\Videos;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+
+
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class VideoIDType extends AbstractType
@@ -15,9 +17,11 @@ class VideoIDType extends AbstractType
         $builder
             ->add('video_id', TextType::class, [
                 'label' => 'Lien de la vidéo :',
-                'attr' => ['class' => 'videoIdclass'],
-            ])
-        ;
+                'attr' => [
+                    'class' => 'videoIdclass',
+                    'id' => 'video_id_input'
+                ],
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

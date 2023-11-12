@@ -1,0 +1,148 @@
+        // VideosController.php        
+        
+        // if ($form->isSubmitted() && $form->isValid()) {
+
+        //     $url = $form->get('video_id')->getData();
+
+        //     $videoID = $this->getYoutubeIdFromUrl($url);
+
+
+        //     if (isset($videoID) != false) {
+        //         $displayInfos = true;
+        //         $videoInfos = $this->getYoutubeInfos($videoID);
+        //         $this->setYoutubeInfos($video, $videoInfos);
+
+        //         $form2->handleRequest($request);
+
+        //         //https://symfony.com/doc/current/form/multiple_buttons.html
+
+        //         if ($form2->isSubmitted() && $form2->isValid()) {
+
+        //             $datas = $form2->get('tags')->getData();
+
+        //             for ($i = 0; $i < count($datas); $i++) {
+        //                 $video->addTag($datas[$i]);
+        //             }
+
+        //             dd($video);
+
+        //             $entityManager->persist($video);
+        //             $entityManager->flush();
+
+        //             return $this->redirectToRoute('app_videos_index', [], Response::HTTP_SEE_OTHER);
+        //         } else {
+        //             dd('Va niquer tes grand morts');
+        //             $errorBool = true;
+        //             $errorMsg = 'Le 2eme formulaire n\'est pas valide';
+        //         }
+        //     } else {
+        //         //Handle if return false
+        //         $errorBool = true;
+        //         $errorMsg = 'Le lien de la vidéo n\'est pas valide';
+        //         return $this->redirectToRoute('app_videos_new', [], Response::HTTP_SEE_OTHER);
+        //     }
+        // }
+
+
+
+
+
+        // Code en vrac 2 
+
+
+                // $form = $this->createFormBuilder()
+        //     ->add('video_id', TextType::class, [
+        //         'label' => 'Lien de la vidéo :',
+        //         'attr' => [
+        //             'class' => 'videoIdclass',
+        //             'id' => 'video_id_input'
+        //         ],
+        //     ])
+        //     ->add('sendButton', SubmitType::class, [
+        //         'label' => 'Envoyer',
+        //         'attr' => ['class' => 'sendButtonVideoId validateButton'],
+        //     ])
+        //     ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+
+        //         $videoID = $event->getData()['video_id'] ?? null;
+        //         $sendButton = $event->getData()['sendButton'] ?? null;
+
+        //         // dd();
+
+        //         if ($videoID !== null ) {
+        //             $event->getForm()->add('tags', EntityType::class, array(
+        //                 'class' => Tags::class,
+        //                 'attr' => ['class' => 'videoTags'],
+        //                 'choice_label' => 'tags_libelle',
+        //                 'mapped' => false,
+        //                 'multiple' => true,
+        //                 'expanded' => true,
+        //                 'by_reference' => false,
+        //             ));
+        //             $event->getForm()->remove('video_id');
+        //         }
+        //     })
+        //     ->getForm();
+
+        // if ($form->get('video_id')->getData() !== null) {
+
+        //     $url = $form->get('video_id')->getData();
+        //     $videoID = $this->getYoutubeIdFromUrl($url);
+        //     $video->setVideoId($videoID);
+
+        //     if (isset($videoID) != false) {
+        //         $displayInfos = true;
+        //         $videoInfos = $this->getYoutubeInfos($videoID);
+        //         $this->setYoutubeInfos($video, $videoInfos);
+
+        //         $tags = $form->get('tags')->getData();
+
+        //         for ($i = 0; $i < count($tags); $i++) {
+        //             $video->addTag($tags[$i]);
+        //         }
+
+        //         $form->handleRequest($request);
+
+        //         if ($form->isSubmitted() && $form->isValid()) {
+
+        //             $entityManager->persist($video);
+        //             $entityManager->flush();
+        //         }
+        //     }
+        // }
+
+        // if ($form->isSubmitted() && $form->isValid()) {
+        //     $url = $form->get('video_id')->getData();
+        //     $videoID = $this->getYoutubeIdFromUrl($url);
+        //     $video->setVideoId($videoID);
+
+        //     if (isset($videoID) != false) {
+        //         $displayInfos = true;
+        //         $videoInfos = $this->getYoutubeInfos($videoID);
+        //         $this->setYoutubeInfos($video, $videoInfos);
+
+        //         $entityManager->persist($video);
+        //         $entityManager->flush();
+        //     } else {
+        //         //Handle if return false
+        //         $errorBool = true;
+        //         $errorMsg = 'Le lien de la vidéo n\'est pas valide';
+        //         return $this->redirectToRoute('app_videos_new', [], Response::HTTP_SEE_OTHER);
+        //     }
+        // } else {
+        //     // Handle fail form submit
+        // }
+
+        // $form2->handleRequest($request);
+
+        // if ($form2->isSubmitted() && $form2->isValid()) {
+        //     $datas = $form2->get('tags')->getData();
+
+        //     for ($i = 0; $i < count($datas); $i++) {
+        //         $video->addTag($datas[$i]);
+        //     }
+
+        //     $entityManager->flush();
+
+        //     return $this->redirectToRoute('app_videos_index', [], Response::HTTP_SEE_OTHER);
+        // }

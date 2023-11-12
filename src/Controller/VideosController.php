@@ -3,8 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Videos;
-use App\Form\VideosType;
 use App\Form\VideoIDType;
+use App\Form\VideosType;
 use App\Form\VideoTagsType;
 use App\Repository\VideosRepository;
 use DateTime;
@@ -81,108 +81,81 @@ class VideosController extends AbstractController
     }
 
     #[Route('/new', name: 'app_videos_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request): Response
     {
-        $displayInfos = false;
+        $partOne = true;
         $errorBool = false;
         $errorMsg = '';
-        $videoInfos = null;
         $video = new Videos();
 
         $form = $this->createForm(VideoIDType::class, $video);
-        $form2 = $this->createForm(VideoTagsType::class, $video);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $url = $form->get('video_id')->getData();
+
+            $videoId = $this->getYoutubeIdFromUrl($url);
+
+            if (isset($videoId) !== false) {
+
+                return $this->redirectToRoute('app_videos_new_tags', ['videoId' => $videoId], Response::HTTP_SEE_OTHER);
+            } else {
+                dd('Erreur, lien de la merde');
+            }
+        }
+
+        return $this->render('videos/new.html.twig', [
+            'partOne' => $partOne,
+            'errorBool' => $errorBool,
+            'errorMsg' => $errorMsg,
+            'form' => $form->createView(),
+        ]);
+    }
+    
+    #[Route('/new/{videoId}', name: 'app_videos_new_tags', methods: ['GET', 'POST'])]
+    public function newId(Request $request, EntityManagerInterface $entityManager, string $videoId): Response
+    {
+        $partOne = false;
+        $errorBool = false;
+        $errorMsg = '';
+        $video = new Videos();
+        
+        $video->setVideoId($videoId);
+        $videoInfos = $this->getYoutubeInfos($videoId);
+        $this->setYoutubeInfos($video, $videoInfos);
+
+        $form = $this->createForm(VideoTagsType::class, $video);
+        
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {
-            $url = $form->get('video_id')->getData();
-            $videoID = $this->getYoutubeIdFromUrl($url);
             
-            if (isset($videoID) != false) {
-                $displayInfos = true;
-                $videoInfos = $this->getYoutubeInfos($videoID);
-                $this->setYoutubeInfos($video, $videoInfos);
-                
-                $entityManager->persist($video);
-                $entityManager->flush();
-            } else {
-                //Handle if return false
-                $errorBool = true;
-                $errorMsg = 'Le lien de la vidéo n\'est pas valide';
-                return $this->redirectToRoute('app_videos_new', [], Response::HTTP_SEE_OTHER);
+            
+            $tags = $form->get('tags')->getData();
+            
+            for ($i = 0; $i < count($tags); $i++) {
+                $video->addTag($tags[$i]);
             }
-        } else {
-            // Handle fail form submit
-        }
-        
-        $form2->handleRequest($request);
-
-        if ($form2->isSubmitted() && $form2->isValid()) {
-            $datas = $form2->get('tags')->getData();
-
-            for ($i = 0; $i < count($datas); $i++) {
-                $video->addTag($datas[$i]);
-            }
-
-
+            
+            $entityManager->persist($video);
             $entityManager->flush();
-
+            
             return $this->redirectToRoute('app_videos_index', [], Response::HTTP_SEE_OTHER);
         }
-
-        // if ($form->isSubmitted() && $form->isValid()) {
-
-        //     $url = $form->get('video_id')->getData();
-
-        //     $videoID = $this->getYoutubeIdFromUrl($url);
-
-
-        //     if (isset($videoID) != false) {
-        //         $displayInfos = true;
-        //         $videoInfos = $this->getYoutubeInfos($videoID);
-        //         $this->setYoutubeInfos($video, $videoInfos);
-
-        //         $form2->handleRequest($request);
-
-        //         //https://symfony.com/doc/current/form/multiple_buttons.html
-
-        //         if ($form2->isSubmitted() && $form2->isValid()) {
-
-        //             $datas = $form2->get('tags')->getData();
-
-        //             for ($i = 0; $i < count($datas); $i++) {
-        //                 $video->addTag($datas[$i]);
-        //             }
-
-        //             dd($video);
-
-        //             $entityManager->persist($video);
-        //             $entityManager->flush();
-
-        //             return $this->redirectToRoute('app_videos_index', [], Response::HTTP_SEE_OTHER);
-        //         } else {
-        //             dd('Va niquer tes grand morts');
-        //             $errorBool = true;
-        //             $errorMsg = 'Le 2eme formulaire n\'est pas valide';
-        //         }
-        //     } else {
-        //         //Handle if return false
-        //         $errorBool = true;
-        //         $errorMsg = 'Le lien de la vidéo n\'est pas valide';
-        //         return $this->redirectToRoute('app_videos_new', [], Response::HTTP_SEE_OTHER);
-        //     }
-        // }
-
+        
+        
         return $this->render('videos/new.html.twig', [
-            'displayInfos' => $displayInfos,
+            'partOne' => $partOne,
             'errorBool' => $errorBool,
             'errorMsg' => $errorMsg,
             'videoInfos' => $videoInfos,
             'video' => $video,
             'form' => $form->createView(),
-            'form2' => $form2->createView(),
         ]);
     }
-
+    
     #[Route('/{id}', name: 'app_videos_show', methods: ['GET'])]
     public function show(Videos $video): Response
     {
