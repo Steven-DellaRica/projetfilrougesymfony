@@ -5,21 +5,22 @@
 	<div class="attributeInfosDiv">
 		<p class="videoAttribute">Nom de la vidéo :
 		</p>
-		<p>{{ videoInfos.snippet.title }}</p>
+		dump(video);
+		<p>{{ video.videotitle }}</p>
 	</div>
 	<div class="attributeInfosDiv">
 		<p class="videoAttribute">Nom de l'auteur :
 		</p>
-		<p>{{ videoInfos.snippet.channelTitle}}</p>
+		<p>{{ video.videoauthor}}</p>
 	</div>
 	<div class="attributeInfosDiv">
 		<p class="videoAttribute">Date du post de la vidéo :
 		</p>
-		<p>{{ videoInfos.snippet.publishedAt }}</p>
+		<p>{{ video.videodate|date('d-m-Y') }}</p>
 	</div>
 	<div class="attributeInfosDiv">
 		<p class="videoAttribute">Image de la vidéo :</p>
-		<img src="{{ videoInfos.snippet.thumbnails.high.url }}"/>
+		<img src="{{ video.videothumbnail }}"/>
 	</div>
 
 	{{form_row(form.tags)}}

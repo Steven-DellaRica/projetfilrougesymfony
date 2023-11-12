@@ -2,12 +2,12 @@
 
 namespace App\Controller;
 
+use DateTime;
 use App\Entity\Videos;
 use App\Form\VideoIDType;
-use App\Form\VideosType;
 use App\Form\VideoTagsType;
+use App\Service\UtilsService;
 use App\Repository\VideosRepository;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -53,22 +53,27 @@ class VideosController extends AbstractController
 
     public function getYoutubeIdFromUrl(string $url)
     {
-        $urlParts = parse_url($url);
-        if (str_contains($urlParts['host'], 'youtube') || str_contains($urlParts['host'], 'youtu.be')) {
-            if (isset($urlParts['query'])) {
-                parse_str($urlParts['query'], $urlQuery);
+        $url = filter_var($url, FILTER_SANITIZE_URL);
 
-                if (isset($urlQuery['v'])) {
-                    return $urlQuery['v'];
-                } else if (isset($urlQuery['vi'])) {
-                    return $urlQuery['vi'];
+        if(filter_var($url, FILTER_VALIDATE_URL)){
+            $urlParts = parse_url($url);
+            if (str_contains($urlParts['host'], 'youtube') || str_contains($urlParts['host'], 'youtu.be')) {
+                if (isset($urlParts['query'])) {
+                    parse_str($urlParts['query'], $urlQuery);
+    
+                    if (isset($urlQuery['v'])) {
+                        return $urlQuery['v'];
+                    } else if (isset($urlQuery['vi'])) {
+                        return $urlQuery['vi'];
+                    }
+                }
+                if (isset($urlParts['path'])) {
+                    $path = explode('/', trim($urlParts['path'], '/'));
+                    return $path[count($path) - 1];
                 }
             }
-            if (isset($urlParts['path'])) {
-                $path = explode('/', trim($urlParts['path'], '/'));
-                return $path[count($path) - 1];
-            }
         }
+
         return false;
     }
 
@@ -94,15 +99,17 @@ class VideosController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $url = $form->get('video_id')->getData();
+            $url = UtilsService::cleanInput($request->request->all('video_id')['video_id']);
 
             $videoId = $this->getYoutubeIdFromUrl($url);
 
-            if (isset($videoId) !== false) {
+            if ($videoId !== false && $videoId !== '') {
 
                 return $this->redirectToRoute('app_videos_new_tags', ['videoId' => $videoId], Response::HTTP_SEE_OTHER);
             } else {
-                dd('Erreur, lien de la merde');
+
+                $errorBool = true;
+                $errorMsg = 'Le lien n\'est pas valide, ou la plateforme n\'est pas reconnue';
             }
         }
 
@@ -121,6 +128,8 @@ class VideosController extends AbstractController
         $errorBool = false;
         $errorMsg = '';
         $video = new Videos();
+
+        $videoId = UtilsService::cleanInput($videoId);
         
         $video->setVideoId($videoId);
         $videoInfos = $this->getYoutubeInfos($videoId);
@@ -150,7 +159,6 @@ class VideosController extends AbstractController
             'partOne' => $partOne,
             'errorBool' => $errorBool,
             'errorMsg' => $errorMsg,
-            'videoInfos' => $videoInfos,
             'video' => $video,
             'form' => $form->createView(),
         ]);
@@ -167,25 +175,35 @@ class VideosController extends AbstractController
     #[Route('/{id}/edit', name: 'app_videos_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Videos $video, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(VideosType::class, $video);
+        $partOne = false;
+        $errorBool = false;
+        $errorMsg = '';
+
+        $form = $this->createForm(VideoTagsType::class, $video);
+        
         $form->handleRequest($request);
-
+        
         if ($form->isSubmitted() && $form->isValid()) {
-
-            $datas = $form->get('tags')->getData();
-
-            for ($i = 0; $i < count($datas); $i++) {
-                $video->addTag($datas[$i]);
+            
+            $tags = $form->get('tags')->getData();
+            
+            for ($i = 0; $i < count($tags); $i++) {
+                $video->addTag($tags[$i]);
             }
+            
             $entityManager->persist($video);
             $entityManager->flush();
-
+            
             return $this->redirectToRoute('app_videos_index', [], Response::HTTP_SEE_OTHER);
         }
-
+        
+        
         return $this->render('videos/edit.html.twig', [
+            'partOne' => $partOne,
+            'errorBool' => $errorBool,
+            'errorMsg' => $errorMsg,
             'video' => $video,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 

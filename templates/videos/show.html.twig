@@ -2,6 +2,10 @@
 
 {% block title %}Videos{% endblock %}
 
+{% block style_add %}
+	{# <link rel="stylesheet" href="{{asset('css/videoaddform.css')}}"> #}
+{% endblock %}
+
 {% block body %}
     <h1>Videos</h1>
 
@@ -23,7 +27,7 @@
                 <th>Video_tags</th>
                 {# <td>{{ video.Tags ? video.Tags|join(', ') : '' }}</td> #}
                 {# {{dump(tags)}} #}
-                {% for tags in video.tags %}
+                {% for tags in video.tags|sort %}
                     <td>{{tags.tagslibelle}}</td>
                 {% endfor %}
             </tr>
@@ -37,7 +41,7 @@
             </tr>
             <tr>
                 <th>Video_date</th>
-                <td>{{ video.videoDate ? video.videoDate|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ video.videoDate ? video.videoDate|date('d-m-Y H:i:s') : '' }}</td>
             </tr>
             <tr>
                 <th>Video_thumbnail</th>

@@ -34,7 +34,7 @@
 					<td>{{ video.videoId }}</td>
 					<td>{{ video.videoTitle }}</td>
 					<td>
-						{% for tags in video.tags %}
+						{% for tags in video.tags|sort %}
 							<p>{{tags.tagslibelle}}</p>
 						{% endfor %}
 					</td>
@@ -44,8 +44,9 @@
 					<td>{{ video.videoThumbnail }}</td>
 					<td>{{ video.videoTimecode }}</td>
 					<td>
-						<a href="{{ path('app_videos_show', {'id': video.id}) }}">show</a>
-						<a href="{{ path('app_videos_edit', {'id': video.id}) }}">edit</a>
+						<a href="{{ path('app_videos_show', {'id': video.id}) }}">Show</a>
+						<a href="{{ path('app_videos_edit', {'id': video.id}) }}">Edit</a>
+						<a href="{{ path('app_videos_delete', {'id': video.id}) }}">Delete</a>
 					</td>
 				</tr>
 			{% else %}

@@ -2,10 +2,14 @@
 
 {% block title %}Edit Videos{% endblock %}
 
+{% block style_add %}
+	<link rel="stylesheet" href="{{asset('css/videoaddform.css')}}">
+{% endblock %}
+
 {% block body %}
     <h1>Edit Videos</h1>
 
-    {{ include('videos/_form.html.twig', {'button_label': 'Update'}) }}
+    {{ include('videos/_formPart2.html.twig', {'button_label': 'Update'}) }}
 
     <a href="{{ path('app_videos_index') }}">back to list</a>
 

@@ -15,12 +15,12 @@
 		</div>
 		<div class="video-card-tags-infos">
 			<ul class="video-tags">
-                {% for tags in video.tags %}
+                {% for tags in video.tags|sort %}
                     <li><a href="#">{{tags.tagslibelle}}</a></li>
                 {% endfor %}
 			</ul>
 			<p class="video-author">{{video.videoauthor}}</p>
-			<p class="video-views">{{video.videoviews}}</p>
+			<p class="video-views">{{video.videolikes}}</p>
 		</div>
 	</div>
 {% endblock %}
