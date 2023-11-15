@@ -36,8 +36,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $user_profile_picture = null;
 
-    // #[ORM\Column(type: 'boolean')]
-    // private $isVerified = false;
+    #[ORM\Column(type: 'boolean')]
+    private $isVerified = false;
 
     public function getId(): ?int
     {
@@ -133,15 +133,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    // public function isVerified(): bool
-    // {
-    //     return $this->isVerified;
-    // }
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
 
-    // public function setIsVerified(bool $isVerified): static
-    // {
-    //     $this->isVerified = $isVerified;
+    public function setIsVerified(bool $isVerified): static
+    {
+        $this->isVerified = $isVerified;
 
-    //     return $this;
-    // }
+        return $this;
+    }
 }

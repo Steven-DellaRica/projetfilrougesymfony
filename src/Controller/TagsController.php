@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/tags')]
+#[Route('/adminpage/tags')]
 class TagsController extends AbstractController
 {
     #[Route('/', name: 'app_tags_index', methods: ['GET'])]

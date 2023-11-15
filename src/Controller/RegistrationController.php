@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
+use App\Repository\UserRepository;
 // use App\Security\EmailVerifier;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -24,6 +25,37 @@ class RegistrationController extends AbstractController
     // {
     //     $this->emailVerifier = $emailVerifier;
     // }
+
+    #[Route('/register', name:'app_register')]
+    public function addUser(Request $request, EntityManagerInterface $em, UserRepository $userRepo, UserPasswordHasherInterface $hash): Response
+    {
+        $msg = '';
+        $user = new User;
+        $form = $this->createForm(RegistrationFormType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            if($userRepo->findOneBy(['email' => $user->getEmail()])){
+                $msg = 'Le compte : ' . $user->getEmail() . 'existe déjà.';
+            } else {
+                $pass = $request->request->all('register')['password']['first'];
+                $hash = $hash->hashPassword($user, $pass);
+                $user->setPassword($hash);
+                $user->setRoles(['ROLE_USER']);
+                $user->setIsVerified(false);
+
+                $em->persist($user);
+                $em->flush();
+
+                $msg = "Le compte : " . $user->getEmail() . " a été ajouté.";
+            }
+        }
+
+        return $this->render('register/index.html.twig', [
+            'message' => $msg,
+            'form' => $form->createView(),
+        ]);
+    }
 
     #[Route('/register', name: 'app_register')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response

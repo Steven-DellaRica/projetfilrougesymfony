@@ -34,8 +34,9 @@
 					<td>{{ user.email }}</td>
 					<td>{{ user.userProfilePicture }}</td>
 					<td>
-						<a href="{{ path('app_user_show', {'id': user.id}) }}">show</a>
-						<a href="{{ path('app_user_edit', {'id': user.id}) }}">edit</a>
+						<a href="{{ path('app_user_show', {'id': user.id}) }}">Show</a>
+						<a href="{{ path('app_user_edit', {'id': user.id}) }}">Edit</a>
+						<a href="{{ path('app_user_delete', {'id': user.id}) }}">Delete</a>
 					</td>
 				</tr>
 			{% else %}

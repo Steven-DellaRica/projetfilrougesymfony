@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/videos')]
+#[Route('/adminpage/videos')]
 class VideosController extends AbstractController
 {
     public function getYoutubeInfos(string $videoId)
