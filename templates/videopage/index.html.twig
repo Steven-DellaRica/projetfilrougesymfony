@@ -21,9 +21,9 @@
 				<div class="tag-content">
 					<p>Tags de catégories</p>
 					{{ form_start(form)}}
-						{{form_row(form.searchBarTags)}}
-						{{form_row(form.searchBarAuthors)}}
-						<button class="btn validateButton">{{ button_label|default('Envoyer') }}</button>
+					{{form_row(form.searchBarTags)}}
+					{{form_row(form.searchBarAuthors)}}
+					<button class="btn validateButton">{{ button_label|default('Envoyer') }}</button>
 					{{ form_end(form) }}
 					<input type="text" placeholder="Guide, combo, perso..."/>
 					<ul class="category-button">
@@ -72,11 +72,15 @@
 				<h3>Système de filtre</h3>
 
 				<div class="video-list">
-					{% block videoCard %}
-						{% for video in videos %}
-							{% include "videopage/_videocard.html.twig" %}
-						{% endfor %}
-					{% endblock %}
+					{% if videos|length > 0 %}
+						{% block videoCard %}
+							{% for video in videos %}
+								{% include "videopage/_videocard.html.twig" %}
+							{% endfor %}
+						{% endblock %}
+					{% else %}
+						<p>Pas de vidéo comportant ces tags disponible</p>
+					{% endif %}
 				</div>
 
 			</div>

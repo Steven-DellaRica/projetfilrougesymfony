@@ -21,6 +21,20 @@ class VideosRepository extends ServiceEntityRepository
         parent::__construct($registry, Videos::class);
     }
 
+
+    public function getVideoTags(int $tagId)
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = '
+            SELECT * FROM videos_tags v
+            WHERE v.tag_id = :tagId
+        ';
+
+        $resultSet = $conn->executeQuery($sql, ['tagId' => $tagId]);
+        
+        return $resultSet->fetchAllAssociative();
+    }
 //    /**
 //     * @return Videos[] Returns an array of Videos objects
 //     */
