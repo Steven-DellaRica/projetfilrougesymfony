@@ -17,53 +17,12 @@
 		<section class="filter-section">
 			<div class="filter-content">
 				<h3>Système de tags</h3>
-
 				<div class="tag-content">
-					<p>Tags de catégories</p>
 					{{ form_start(form)}}
 					{{form_row(form.searchBarTags)}}
-					{{form_row(form.searchBarAuthors)}}
-					<button class="btn validateButton">{{ button_label|default('Envoyer') }}</button>
+					{# {{form_row(form.searchBarAuthors)}} #}
+					<button class="btn validateButton">{{ button_label|default('Rechercher') }}</button>
 					{{ form_end(form) }}
-					<input type="text" placeholder="Guide, combo, perso..."/>
-					<ul class="category-button">
-						<li>
-							<button href="#">Guide</button>
-						</li>
-						<li>
-							<button href="#">Combos</button>
-						</li>
-						<li>
-							<button href="#">Persos</button>
-						</li>
-						<li>
-							<button href="#">Joueurs</button>
-						</li>
-					</ul>
-				</div>
-				<div class="tag-content">
-					<p>Tags par auteurs</p>
-					<input type="text" placeholder="Mr.Crimson, Valmaster..."/>
-					<ul class="category-button">
-						<li>
-							<button href="#">Mr.Crimson</button>
-						</li>
-						<li>
-							<button href="#">Valmaster</button>
-						</li>
-						<li>
-							<button href="#">Brian_F</button>
-						</li>
-					</ul>
-				</div>
-				<div class="tag-content">
-					<p>Version du jeu</p>
-					<input type="text" placeholder="Current, ..."/>
-					<ul class="category-button">
-						<li>
-							<button href="#">Current</button>
-						</li>
-					</ul>
 				</div>
 			</div>
 		</section>
@@ -79,7 +38,7 @@
 							{% endfor %}
 						{% endblock %}
 					{% else %}
-						<p>Pas de vidéo comportant ces tags disponible</p>
+						<p class="error-message">Pas de vidéo comportant ces tags disponible.</p>
 					{% endif %}
 				</div>
 

@@ -16,6 +16,10 @@ class Tags
     #[ORM\Column(length: 30)]
     private ?string $tags_libelle = null;
 
+    public function __toString(){
+        return $this->tags_libelle;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

@@ -30,7 +30,7 @@ main {
     padding-top: 1em;
 }
 
-.filter-content div p {
+.filter-content form label {
     color: white;
 }
 
@@ -48,8 +48,7 @@ main {
     color: #a7a3d1;
 }
 
-.filter-content .tag-content {
-    margin-top: 1em;
+.filter-content div{
     margin-bottom: 1em;
 }
 
@@ -58,19 +57,28 @@ main {
     flex-direction: row;
 }
 
-.category-button button {
+.validateButton {
     background-color: orange;
-    margin-right: 0.3em;
-    border: none;
-    border-radius: 30px;
+    color: black;
+    font-size: 18px;
+    font-weight: 500;
+    border: 1px solid black;
+    padding: 0.3em 0.7em 0.3em 0.7em;
+    border-radius: 5px;
     cursor: pointer;
 }
 
-.category-button button:hover{
+.validateButton:hover{
     background-color: rgb(255, 183, 48);
 }
-.category-button button:active{
+.validateButton:active{
     background-color: rgb(202, 132, 2);
+}
+
+.error-message {
+    color: white;
+    font-weight: 600;
+    font-size: 18px;
 }
 
 /* Video section elements */
