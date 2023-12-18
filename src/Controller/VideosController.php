@@ -86,12 +86,14 @@ class VideosController extends AbstractController
     }
 
     #[Route('/new', name: 'app_videos_new', methods: ['GET', 'POST'])]
-    public function new(Request $request): Response
+    public function new(Request $request, VideosRepository $videosRepository): Response
     {
         $partOne = true;
         $errorBool = false;
         $errorMsg = '';
         $video = new Videos();
+
+        $videosStocked = $videosRepository->findAll();
 
         $form = $this->createForm(VideoIDType::class, $video);
 
@@ -102,10 +104,24 @@ class VideosController extends AbstractController
             $url = UtilsService::cleanInput($request->request->all('video_id')['video_id']);
 
             $videoId = $this->getYoutubeIdFromUrl($url);
-
+            
             if ($videoId !== false && $videoId !== '') {
+                $duplicateId = false;
+                foreach ($videosStocked as $video => $value) {
+                    
+                    if($value->getVideoId() === $videoId){
+                        $duplicateId = true;
+                    }
+                }
+                // dd($duplicateId);
 
-                return $this->redirectToRoute('app_videos_new_tags', ['videoId' => $videoId], Response::HTTP_SEE_OTHER);
+                if ($duplicateId === true ){
+                    $errorBool = true;
+                    $errorMsg = 'La vidéo existe déjà';
+                } else {
+                    return $this->redirectToRoute('app_videos_new_tags', ['videoId' => $videoId], Response::HTTP_SEE_OTHER);
+                }
+
             } else {
 
                 $errorBool = true;

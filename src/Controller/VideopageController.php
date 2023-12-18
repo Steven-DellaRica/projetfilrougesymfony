@@ -25,7 +25,8 @@ class VideopageController extends AbstractController
         // La requête a bien été envoyée
         if ($form->isSubmitted() && $form->isValid()) {
 
-            if ($form->getData()['searchBarTags'] === null && $form->getData()['searchBarAuthors'] === null) {
+            if ($form->getData()['searchBarTags'] === null) {
+                // && $form->getData()['searchBarAuthors'] === null
                 // Si l'utilisateur appuye sur le bouton Rechercher sans rien écrire, on remet toutes les vidéos au cas ou
                 $videosDisplay = $videosRepository->findAll();
             } else {
@@ -35,6 +36,7 @@ class VideopageController extends AbstractController
                 } else {
                     $searchTags = [];
                 }
+
                 // if ($form->getData()['searchBarAuthors'] !== null) {
                 //     $searchAuthors = explode(" ", UtilsService::cleanInput($form->getData()['searchBarAuthors']));
                 // } else {
@@ -43,25 +45,27 @@ class VideopageController extends AbstractController
 
                 //On regroupe les résultats dans un tableau
                 $searchInput = array_merge($searchTags);
-
-                //On récupère les tags recherchés par l'utilisateur
-                foreach ($searchInput as $tag) {
-                    $tagArray[] = $tagsRepository->findBy(['tags_libelle' => $tag]);
-                }
                 
+                //On récupère les tags recherchés par l'utilisateur
+                foreach ($searchTags as $tag) {
+                    if(!empty($tagsRepository->findBy(['tags_libelle' => $tag]))){
+                        $tagArray[] = $tagsRepository->findBy(['tags_libelle' => $tag]);
+                    }
+                }
+                // $tagArray = array_merge(...$tagArray);
                 $vide = true;
-
+                
                 //On vérifie si au moins un tag est valide et présent dans la BDD
-                foreach ($tagArray as $index => $tag){
-                    if(!empty($tag)){
+                foreach ($tagArray as $index => $tag) {
+                    if (!empty($tag)) {
                         $vide = false;
                     } else {
                         unset($tagArray[$index]);
                         $tagArray = array_values($tagArray);
                     }
                 }
-
-                if($vide === true){
+                
+                if ($vide === true) {
                     // Envoi un tableau vide si aucun tag ou auteur ne correspond à la recherche
                     $videosDisplay = null;
                 } else {
@@ -70,29 +74,28 @@ class VideopageController extends AbstractController
                         $tagId[] = $tag[0]->getId();
                     }
                     // Récupérer l'id des vidéos concernées
-                    foreach($tagId as $tag){
+                    foreach ($tagId as $tag) {
                         $tempVideosDisplay[] = $videosRepository->getVideoTags($tag);
                     }
                     $videosDisplay = array_merge(...$tempVideosDisplay);
                     
+                    // dd($tagArray);
                     // Récupérer l'objet vidéo correspondant à l'id récupérée
-                    foreach ($videosDisplay as $videoId){
-                        if(empty($videosRepository->find($videoId['video_id']))){
+                    foreach ($videosDisplay as $videoId) {
+                        if (empty($videosRepository->find($videoId['video_id']))) {
                             echo '<pre>La vidéo n existe pas ' . var_export($videoId['video_id'], true) . '</pre>';
                         } else {
                             $tempVideosDisplay2[] = $videosRepository->find($videoId['video_id']);
                         }
                     }
                     $videosDisplay = $tempVideosDisplay2;
-                    
                 }
-
             }
         }
 
         return $this->render('videopage/index.html.twig', [
             'videos' => $videosDisplay,
-            'form' => $form->createView(),
+            'form' => $form,
         ]);
     }
 }
