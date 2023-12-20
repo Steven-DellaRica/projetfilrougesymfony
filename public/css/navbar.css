@@ -68,12 +68,13 @@
 }
 
 .navbar-login a {
-    background-color: #007BFF;
+    background-color:#0c0b0f;
     color: #fff;
     font-family: 'Roboto', sans-serif;
     margin-right: 1em;
     padding: 8px 16px;
     border-radius: 5px;
     text-decoration: none;
-    font-weight: bold;
+    font-size: 18px;
+    font-weight: 500;
 }

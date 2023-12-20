@@ -1,0 +1,21 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    background-image: url('../images/background.png');
+    background-attachment: fixed;    
+}
+
+h1 {
+    text-align: center;
+    color: white;
+    font-size: 24px;
+    font-weight: 600;
+    margin-top: 2em;
+}
+
+h3 {
+    text-align: center;
+    color: white;
+    font-size: 18px;
+    font-weight: 500;
+    margin-top: 2em;
+}

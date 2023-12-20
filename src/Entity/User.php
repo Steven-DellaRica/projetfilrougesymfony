@@ -3,7 +3,12 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\InverseJoinColumn;
+use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\JoinTable;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -38,6 +43,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'boolean')]
     private $isVerified = false;
+    /**
+     * Many Users have many videos likes
+     * @var Collection<int,Videos>
+     */
+    #[JoinTable(name: 'user_likes')]
+    #[JoinColumn(name: 'user_id', referencedColumnName: 'id')]
+    #[InverseJoinColumn(name: 'videos_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: Videos::class, inversedBy: 'user')]
+    private Collection $video_likes;
+
+    #[JoinTable(name: 'user_favorites')]
+    #[JoinColumn(name: 'user_id', referencedColumnName: 'id')]
+    #[InverseJoinColumn(name: 'videos_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: Videos::class, inversedBy: 'user')]
+    private Collection $video_favorites;
+
+    public function __construct()
+    {
+        $this->video_likes = new ArrayCollection();
+        $this->video_favorites = new ArrayCollection();
+    }
 
     public function __toString(){
         return $this->username;
@@ -145,6 +171,54 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsVerified(bool $isVerified): static
     {
         $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Videos>
+     */
+    public function getVideoLikes(): Collection
+    {
+        return $this->video_likes;
+    }
+
+    public function addVideoLike(Videos $videoLike): static
+    {
+        if (!$this->video_likes->contains($videoLike)) {
+            $this->video_likes->add($videoLike);
+        }
+
+        return $this;
+    }
+
+    public function removeVideoLike(Videos $videoLike): static
+    {
+        $this->video_likes->removeElement($videoLike);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Videos>
+     */
+    public function getVideoFavorites(): Collection
+    {
+        return $this->video_favorites;
+    }
+
+    public function addVideoFavorite(Videos $videoFavorite): static
+    {
+        if (!$this->video_favorites->contains($videoFavorite)) {
+            $this->video_favorites->add($videoFavorite);
+        }
+
+        return $this;
+    }
+
+    public function removeVideoFavorite(Videos $videoFavorite): static
+    {
+        $this->video_favorites->removeElement($videoFavorite);
 
         return $this;
     }

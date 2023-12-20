@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}User Page
+{% endblock %}
+
+{% block style_add %}
+	<link rel="stylesheet" href="{{asset('css/userpage.css')}}">
+{% endblock %}
+
+{% block header %}
+	{% include "navbar.html.twig" %}
+{% endblock %}
+
+{% block body %}
+	<section class="main-section">
+
+		{% if errorBool %}
+			<h1>{{ errorMessage }}</h1>
+		{% else %}
+			<div>
+				<h1>Welcome {{ user.username }} !!</h1>
+				<h3>User Settings</h3>
+				<ul>
+					<li><a href="#">Change username (must be unique)</li>
+					<li><a href="#">Change email</li>
+					<li><a href="#">Change password</li>
+					<li><a href="#">Change profile picture</li>
+					<li><a href="#">My videos</li>
+				</ul>
+			</div>
+		{% endif %}
+
+	</section>
+{% endblock %}
