@@ -69,3 +69,15 @@
     font-weight: bold;
     color: #333;
 }
+
+.video-card-bottom {
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.video-card-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}

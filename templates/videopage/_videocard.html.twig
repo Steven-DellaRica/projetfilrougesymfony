@@ -13,14 +13,24 @@
 				<h2 class="video-title">{{video.videotitle}}</h2>
 			</div>
 		</div>
-		<div class="video-card-tags-infos">
-			<ul class="video-tags">
-                {% for tags in video.tags|sort %}
-                    <li><a href="#">{{tags.tagslibelle}}</a></li>
-                {% endfor %}
-			</ul>
-			<p class="video-author">{{video.videoauthor}}</p>
-			<p class="video-views">{{video.videolikes}}</p>
+		<div class="video-card-bottom">
+			<div class="video-card-tags-infos">
+				<ul class="video-tags">
+					{% for tags in video.tags|sort %}
+						<li>
+							<a href="#">{{tags.tagslibelle}}</a>
+						</li>
+					{% endfor %}
+				</ul>
+				<p class="video-author">{{video.videoauthor}}</p>
+				<p class="video-views">{{video.videolikes}}</p>
+			</div>
+			<div class="video-card-buttons">
+				{% if is_granted('ROLE_USER') %}
+					<button>Like</button>
+					<button>Favorite</button>
+				{% endif %}
+			</div>
 		</div>
 	</div>
 {% endblock %}
