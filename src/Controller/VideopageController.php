@@ -2,27 +2,43 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
+use App\Entity\Videos;
 use App\Form\SearchType;
 use App\Repository\TagsRepository;
+use App\Repository\UserRepository;
 use App\Service\UtilsService;
 use App\Repository\VideosRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/videopage')]
 class VideopageController extends AbstractController
 {
     #[Route('/', name: 'app_videopage', methods: ['GET', 'POST'])]
-    public function index(Request $request, VideosRepository $videosRepository, TagsRepository $tagsRepository): Response
+    public function index(Request $request, VideosRepository $videosRepository, UserRepository $userRepo, TagsRepository $tagsRepository): Response
     {
         $form = $this->createForm(SearchType::class);
         // Par défaut on affiche toutes les vidéos
         $videosDisplay = $videosRepository->findAll();
         $form->handleRequest($request);
+        $user = $this->getUser();
 
-        // La requête a bien été envoyée
+        if($user){
+            $userId = $user->getId();
+            $video = $videosRepository->findOneBy(['video_id' => 'fkdRet7WJw0']);
+            $videoRealId = $video->getId();
+            $userVideoLike = $userRepo->getVideoLike($videoRealId, $userId);
+            var_dump($userVideoLike);
+        }
+        
+
+        // La demande de requête a bien été envoyée pour effectuer la recherche
         if ($form->isSubmitted() && $form->isValid()) {
 
             if ($form->getData()['searchBarTags'] === null) {
@@ -97,5 +113,51 @@ class VideopageController extends AbstractController
             'videos' => $videosDisplay,
             'form' => $form,
         ]);
+    }
+
+    #[Route('/like-video/{videoYoutubeId}', name: 'like_video', methods: ['GET', 'POST'])]
+    public function likeVideo(Request $request, VideosRepository $videosRepository, UserRepository $userRepo, EntityManagerInterface $em, string $videoYoutubeId): Response
+    {
+        $video = $videosRepository->findOneBy(['video_id' => $videoYoutubeId]);
+        $videoRealId = $video->getId();
+        $user = $this->getUser()->getId();
+
+        $userVideoLike = $userRepo->getVideoLike($videoRealId, $user);
+
+        if($video === null){
+            throw new NotFoundHttpException('Video not found');
+        }
+
+        //Check if user did not like this video yet
+        // $userVideoLike = $userRepo->findOneBy(['user_id' => $user, 'video_id' => $videoRealId]);
+
+        // foreach ($userVideoLike as $video => $videoId) {
+        //     if($userVideoLike) {
+
+        //     }
+        // }
+
+        if($userVideoLike){
+
+        }
+
+        if(1+1 === 2){
+            return new JsonResponse(['result' => 'success']);
+        }
+        
+        return new JsonResponse(['result' => 'failed']);
+        
+
+        // $videoId = $request->request->get('videoId');
+        // $video = $videosRepository->find($videoId);
+
+        // if(!$video){
+        //     return new Response('Video non trouvée.', 404);
+        // }
+
+        // $video->setVideoLikes($video->getVideoLikes() + 1);
+        // $em->flush();
+
+        // return $this->json(['likes' => $video->getVideoLikes()]);
     }
 }

@@ -27,10 +27,14 @@
 			</div>
 			<div class="video-card-buttons">
 				{% if is_granted('ROLE_USER') %}
-					<button>Like</button>
+					<button class="likeButton" data-video-id="{{video.videoid}}">Like</button>
 					<button>Favorite</button>
 				{% endif %}
 			</div>
 		</div>
 	</div>
+{% endblock %}
+
+{% block javascripts %}
+	<script src="{{ asset('javascript/likeVideos.js') }}"></script>
 {% endblock %}

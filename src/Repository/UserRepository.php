@@ -39,6 +39,21 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->getEntityManager()->flush();
     }
 
+    public function getVideoLike(int $videoId, int $userId)
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = '
+            SELECT * FROM user_likes v
+            WHERE v.videos_id = :videoId
+            AND v.user_id = :userId
+        ';
+
+        $resultSet = $conn->executeQuery($sql, ['videoId' => $videoId, 'userId' => $userId]);
+        
+        return $resultSet->fetchAllAssociative();
+    }
+
 //    /**
 //     * @return User[] Returns an array of User objects
 //     */

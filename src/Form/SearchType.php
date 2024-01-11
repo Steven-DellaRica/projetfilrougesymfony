@@ -14,15 +14,15 @@ class SearchType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('searchBarTags', EntityType::class, [
-                'class' => Tags::class,
-                // 'required' => false,
-                'placeholder' => 'Coucou les nenfants',
-                'autocomplete' => true,
-                // 'attr' => [
-                //     'placeholder' => 'What are you looking for ?',
-                //     'class' => 'formjesaispasquoi'
-                // ]
+            ->add('searchBarTags', TextType::class, [
+                // 'class' => Tags::class,
+                'required' => false,
+                // 'placeholder' => 'Coucou les nenfants',
+                // 'autocomplete' => true,
+                'attr' => [
+                    'placeholder' => 'What are you looking for ?',
+                    'class' => 'formjesaispasquoi'
+                ]
             ])
             // ->add('searchBarAuthors', TextType::class, [
             //     'required' => false,
