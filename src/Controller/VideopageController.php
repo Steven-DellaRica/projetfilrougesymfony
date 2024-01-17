@@ -2,8 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
-use App\Entity\Videos;
 use App\Form\SearchType;
 use App\Repository\TagsRepository;
 use App\Repository\UserRepository;
@@ -24,18 +22,27 @@ class VideopageController extends AbstractController
     public function index(Request $request, VideosRepository $videosRepository, UserRepository $userRepo, TagsRepository $tagsRepository): Response
     {
         $form = $this->createForm(SearchType::class);
+
         // Par défaut on affiche toutes les vidéos
         $videosDisplay = $videosRepository->findAll();
         $form->handleRequest($request);
+        $userVideoLikeId = null;
+
         $user = $this->getUser();
 
         if($user){
             $userId = $user->getId();
-            $video = $videosRepository->findOneBy(['video_id' => 'fkdRet7WJw0']);
-            $videoRealId = $video->getId();
-            $userVideoLike = $userRepo->getVideoLike($videoRealId, $userId);
-            var_dump($userVideoLike);
+            $userVideoLike = $userRepo->getAllVideoLike($userId);
+
+            foreach($userVideoLike as $userVideoId){
+                // $userVideoLikeMerge[] = $userVideoId;
+                // var_dump($userVideoId["videos_id"]);
+                $userVideoLikeId[] = $userVideoId["videos_id"];
+            }
+
         }
+
+        // dd($userVideoLikeId);
         
 
         // La demande de requête a bien été envoyée pour effectuer la recherche
@@ -95,7 +102,6 @@ class VideopageController extends AbstractController
                     }
                     $videosDisplay = array_merge(...$tempVideosDisplay);
                     
-                    // dd($tagArray);
                     // Récupérer l'objet vidéo correspondant à l'id récupérée
                     foreach ($videosDisplay as $videoId) {
                         if (empty($videosRepository->find($videoId['video_id']))) {
@@ -110,6 +116,8 @@ class VideopageController extends AbstractController
         }
 
         return $this->render('videopage/index.html.twig', [
+            'user' => $user,
+            'userVideoLike' => $userVideoLikeId,
             'videos' => $videosDisplay,
             'form' => $form,
         ]);
@@ -120,44 +128,39 @@ class VideopageController extends AbstractController
     {
         $video = $videosRepository->findOneBy(['video_id' => $videoYoutubeId]);
         $videoRealId = $video->getId();
-        $user = $this->getUser()->getId();
+        $user = $this->getUser();
+        $userId = $this->getUser()->getId();
 
-        $userVideoLike = $userRepo->getVideoLike($videoRealId, $user);
+        $userInstance = $userRepo->find($userId);
+
+        $userVideoLike = $userRepo->getVideoLike($videoRealId, $userId);
+
+
+        if($user === null){
+            throw new NotFoundHttpException('User not logged');
+        }
 
         if($video === null){
             throw new NotFoundHttpException('Video not found');
         }
 
-        //Check if user did not like this video yet
-        // $userVideoLike = $userRepo->findOneBy(['user_id' => $user, 'video_id' => $videoRealId]);
-
-        // foreach ($userVideoLike as $video => $videoId) {
-        //     if($userVideoLike) {
-
-        //     }
-        // }
-
         if($userVideoLike){
+            $userInstance->removeVideoLike($video);
+            $video->setVideoLikes($video->getVideoLikes() - 1);
 
-        }
+            $em->persist($userInstance);
+            $em->flush();
 
-        if(1+1 === 2){
+            return new JsonResponse(['result' => 'success']);
+        } else {
+            $userInstance->addVideoLike($video);
+            $video->setVideoLikes($video->getVideoLikes() + 1);
+
+            $em->persist($userInstance);
+            $em->flush();
+            
             return new JsonResponse(['result' => 'success']);
         }
         
-        return new JsonResponse(['result' => 'failed']);
-        
-
-        // $videoId = $request->request->get('videoId');
-        // $video = $videosRepository->find($videoId);
-
-        // if(!$video){
-        //     return new Response('Video non trouvée.', 404);
-        // }
-
-        // $video->setVideoLikes($video->getVideoLikes() + 1);
-        // $em->flush();
-
-        // return $this->json(['likes' => $video->getVideoLikes()]);
     }
 }

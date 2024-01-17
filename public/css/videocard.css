@@ -81,3 +81,11 @@
     align-items: center;
     justify-content: space-evenly;
 }
+
+.likeButton.off {
+    background-color: blue;
+}
+
+.likeButton.on{
+    background-color: red;
+}

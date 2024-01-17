@@ -27,8 +27,17 @@
 			</div>
 			<div class="video-card-buttons">
 				{% if is_granted('ROLE_USER') %}
-					<button class="likeButton" data-video-id="{{video.videoid}}">Like</button>
-					<button>Favorite</button>
+
+
+					{% if video.id in userVideoLike %}
+						<button class="likeButton on" data-video-id="{{video.videoid}}">Like</button>
+					{% else %}
+						<button class="likeButton off" data-video-id="{{video.videoid}}">Like</button>
+					{% endif %}
+
+					<button>
+						Favorite
+					</button>
 				{% endif %}
 			</div>
 		</div>
