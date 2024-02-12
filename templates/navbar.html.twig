@@ -27,12 +27,12 @@
 		</div>
 
 		{# <div class="navbar-central">
-			<div class="navbar-search">
-				<button><img src="{{asset('images/glass.png')}}"></button>
-				<input type="text" placeholder="Rechercher...">
-			</div>
-		</div> #}
-		
+					<div class="navbar-search">
+						<button><img src="{{asset('images/glass.png')}}"></button>
+						<input type="text" placeholder="Rechercher...">
+					</div>
+				</div> #}
+
 		<div class="navbar-rightside">
 			<div class="navbar-login">
 				{% if not is_granted('ROLE_USER') %}
@@ -42,6 +42,7 @@
 					</div>
 				{% else %}
 					<div class="navbar-connectbutton">
+						<a href="{{path('app_videos_new') }}">Poster une vidéo</a>
 						<a href="{{path('app_user_page', { 'id': app.user.id }) }}">{{ app.user.username}}</a>
 						<a href="{{path('app_logout')}}">Se déconnecter</a>
 					</div>

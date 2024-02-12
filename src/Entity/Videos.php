@@ -46,6 +46,10 @@ class Videos
     #[ORM\ManyToMany(targetEntity: Tags::class, inversedBy: 'videos')]
     private Collection $tags;
 
+    #[ORM\ManyToOne(inversedBy: 'videos')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $video_user_poster = null;
+
     public function __construct()
     {
         $this->tags = new ArrayCollection();
@@ -160,6 +164,18 @@ class Videos
     public function removeTag(Tags $tag): static
     {
         $this->tags->removeElement($tag);
+
+        return $this;
+    }
+
+    public function getVideoUserPoster(): ?User
+    {
+        return $this->video_user_poster;
+    }
+
+    public function setVideoUserPoster(?User $video_user_poster): static
+    {
+        $this->video_user_poster = $video_user_poster;
 
         return $this;
     }

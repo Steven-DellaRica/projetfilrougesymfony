@@ -59,10 +59,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: Videos::class, inversedBy: 'user')]
     private Collection $video_favorites;
 
+    #[ORM\OneToMany(mappedBy: 'video_user_poster', targetEntity: Videos::class)]
+    private Collection $videos;
+
     public function __construct()
     {
         $this->video_likes = new ArrayCollection();
         $this->video_favorites = new ArrayCollection();
+        $this->videos = new ArrayCollection();
     }
 
     public function __toString(){
@@ -219,6 +223,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeVideoFavorite(Videos $videoFavorite): static
     {
         $this->video_favorites->removeElement($videoFavorite);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Videos>
+     */
+    public function getVideos(): Collection
+    {
+        return $this->videos;
+    }
+
+    public function addVideo(Videos $video): static
+    {
+        if (!$this->videos->contains($video)) {
+            $this->videos->add($video);
+            $video->setVideoUserPoster($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVideo(Videos $video): static
+    {
+        if ($this->videos->removeElement($video)) {
+            // set the owning side to null (unless already changed)
+            if ($video->getVideoUserPoster() === $this) {
+                $video->setVideoUserPoster(null);
+            }
+        }
 
         return $this;
     }

@@ -35,8 +35,6 @@ class VideopageController extends AbstractController
             $userVideoLike = $userRepo->getAllVideoLike($userId);
 
             foreach($userVideoLike as $userVideoId){
-                // $userVideoLikeMerge[] = $userVideoId;
-                // var_dump($userVideoId["videos_id"]);
                 $userVideoLikeId[] = $userVideoId["videos_id"];
             }
 

@@ -39,6 +39,7 @@ security:
     access_control:
         # - { path: ^/videopage, roles: [ROLE_ADMIN, ROLE_USER] }
         - { path: ^/adminpage, roles: ROLE_ADMIN }
+        - { path: ^/videos/adminpage, roles: ROLE_ADMIN }
         - { path: ^/profile, roles: ROLE_USER }
 
 when@test:

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use DateTime;
 use App\Entity\Videos;
+use App\Entity\User;
 use App\Form\VideoIDType;
 use App\Form\VideoTagsType;
 use App\Service\UtilsService;
@@ -14,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/adminpage/videos')]
+#[Route('/videos')] // Je tente le changement d'enlever le adminpage "/adminpage"
 class VideosController extends AbstractController
 {
     public function getYoutubeInfos(string $videoId)
@@ -38,7 +39,7 @@ class VideosController extends AbstractController
         return $videoSnippet;
     }
 
-    public function setYoutubeInfos(Videos $video, array $youtubeInfos)
+    public function setYoutubeInfos(Videos $video, array $youtubeInfos, User $currentUser)
     {
         $video->setVideoTitle($youtubeInfos['snippet']['title']);
         $video->setVideoAuthor($youtubeInfos['snippet']['channelTitle']);
@@ -47,6 +48,7 @@ class VideosController extends AbstractController
         $videoDateConverted = new DateTime($dateString);
         $video->setVideoDate($videoDateConverted);
         $video->setVideoThumbnail($youtubeInfos['snippet']['thumbnails']['high']['url']);
+        $video->setVideoUserPoster($currentUser);
 
         return $video;
     }
@@ -55,12 +57,12 @@ class VideosController extends AbstractController
     {
         $url = filter_var($url, FILTER_SANITIZE_URL);
 
-        if(filter_var($url, FILTER_VALIDATE_URL)){
+        if (filter_var($url, FILTER_VALIDATE_URL)) {
             $urlParts = parse_url($url);
             if (str_contains($urlParts['host'], 'youtube') || str_contains($urlParts['host'], 'youtu.be')) {
                 if (isset($urlParts['query'])) {
                     parse_str($urlParts['query'], $urlQuery);
-    
+
                     if (isset($urlQuery['v'])) {
                         return $urlQuery['v'];
                     } else if (isset($urlQuery['vi'])) {
@@ -77,7 +79,7 @@ class VideosController extends AbstractController
         return false;
     }
 
-    #[Route('/', name: 'app_videos_index', methods: ['GET'])]
+    #[Route('/adminpage', name: 'app_videos_index', methods: ['GET'])]
     public function index(VideosRepository $videosRepository): Response
     {
         return $this->render('videos/index.html.twig', [
@@ -104,24 +106,22 @@ class VideosController extends AbstractController
             $url = UtilsService::cleanInput($request->request->all('video_id')['video_id']);
 
             $videoId = $this->getYoutubeIdFromUrl($url);
-            
+
             if ($videoId !== false && $videoId !== '') {
                 $duplicateId = false;
                 foreach ($videosStocked as $video => $value) {
-                    
-                    if($value->getVideoId() === $videoId){
+
+                    if ($value->getVideoId() === $videoId) {
                         $duplicateId = true;
                     }
                 }
-                // dd($duplicateId);
 
-                if ($duplicateId === true ){
+                if ($duplicateId === true) {
                     $errorBool = true;
                     $errorMsg = 'La vidéo existe déjà';
                 } else {
                     return $this->redirectToRoute('app_videos_new_tags', ['videoId' => $videoId], Response::HTTP_SEE_OTHER);
                 }
-
             } else {
 
                 $errorBool = true;
@@ -136,7 +136,7 @@ class VideosController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
-    
+
     #[Route('/new/{videoId}', name: 'app_videos_new_tags', methods: ['GET', 'POST'])]
     public function newId(Request $request, EntityManagerInterface $entityManager, string $videoId): Response
     {
@@ -144,33 +144,38 @@ class VideosController extends AbstractController
         $errorBool = false;
         $errorMsg = '';
         $video = new Videos();
+        $user = $this->getUser();
 
         $videoId = UtilsService::cleanInput($videoId);
-        
+
         $video->setVideoId($videoId);
         $videoInfos = $this->getYoutubeInfos($videoId);
-        $this->setYoutubeInfos($video, $videoInfos);
+        $this->setYoutubeInfos($video, $videoInfos, $user);
 
         $form = $this->createForm(VideoTagsType::class, $video);
-        
+
         $form->handleRequest($request);
-        
+
         if ($form->isSubmitted() && $form->isValid()) {
-            
-            
+
+
             $tags = $form->get('tags')->getData();
-            
+
             for ($i = 0; $i < count($tags); $i++) {
                 $video->addTag($tags[$i]);
             }
-            
+
             $entityManager->persist($video);
             $entityManager->flush();
-            
-            return $this->redirectToRoute('app_videos_index', [], Response::HTTP_SEE_OTHER);
+
+            if ($user->getRoles() == "ROLE_ADMIN") {
+                return $this->redirectToRoute('app_videos_index', [], Response::HTTP_SEE_OTHER);
+            } else {
+                return $this->redirectToRoute('app_videopage', [], Response::HTTP_SEE_OTHER);
+            }
         }
-        
-        
+
+
         return $this->render('videos/new.html.twig', [
             'partOne' => $partOne,
             'errorBool' => $errorBool,
@@ -179,7 +184,7 @@ class VideosController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
-    
+
     #[Route('/{id}', name: 'app_videos_show', methods: ['GET'])]
     public function show(Videos $video): Response
     {
@@ -196,24 +201,24 @@ class VideosController extends AbstractController
         $errorMsg = '';
 
         $form = $this->createForm(VideoTagsType::class, $video);
-        
+
         $form->handleRequest($request);
-        
+
         if ($form->isSubmitted() && $form->isValid()) {
-            
+
             $tags = $form->get('tags')->getData();
-            
+
             for ($i = 0; $i < count($tags); $i++) {
                 $video->addTag($tags[$i]);
             }
-            
+
             $entityManager->persist($video);
             $entityManager->flush();
-            
+
             return $this->redirectToRoute('app_videos_index', [], Response::HTTP_SEE_OTHER);
         }
-        
-        
+
+
         return $this->render('videos/edit.html.twig', [
             'partOne' => $partOne,
             'errorBool' => $errorBool,
