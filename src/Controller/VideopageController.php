@@ -122,7 +122,7 @@ class VideopageController extends AbstractController
     }
 
     #[Route('/like-video/{videoYoutubeId}', name: 'like_video', methods: ['GET', 'POST'])]
-    public function likeVideo(Request $request, VideosRepository $videosRepository, UserRepository $userRepo, EntityManagerInterface $em, string $videoYoutubeId): Response
+    public function likeVideo(VideosRepository $videosRepository, UserRepository $userRepo, EntityManagerInterface $em, string $videoYoutubeId): Response
     {
         $video = $videosRepository->findOneBy(['video_id' => $videoYoutubeId]);
         $videoRealId = $video->getId();

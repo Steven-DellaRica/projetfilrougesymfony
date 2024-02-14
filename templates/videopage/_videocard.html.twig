@@ -26,18 +26,19 @@
 				<p class="video-views">{{video.videolikes}}</p>
 			</div>
 			<div class="video-card-buttons">
+				{# Seulement les utilisateurs ayant un compte peuvent accéder aux boutons #}
 				{% if is_granted('ROLE_USER') %}
 
-
+					{# On vérifie si l'utilisateur a précédemment liké la vidéo pour savoir quel bouton afficher #}
 					{% if video.id in userVideoLike %}
-						<button class="likeButton on" data-video-id="{{video.videoid}}">Like</button>
+						<input class="likeButton on" type="image" src="{{ asset('images/LikeButtonWhite.png') }}" data-video-id="{{video.videoid}}"/>
 					{% else %}
-						<button class="likeButton off" data-video-id="{{video.videoid}}">Like</button>
+						<input class="likeButton off" type="image" src="{{ asset('images/LikeButtonWhite.png') }}" data-video-id="{{video.videoid}}"/>
 					{% endif %}
 
-					<button>
-						Favorite
-					</button>
+					{# Pas encore fonctionnel mais devrait avoir la même logique que les boutons du dessus #}
+					<input class="favouriteButton off" type="image" src="{{ asset('images/FavouriteButtonWhite.png') }}" data-video-id="{{video.videoid}}"/>
+
 				{% endif %}
 			</div>
 		</div>
