@@ -38,10 +38,7 @@ class VideopageController extends AbstractController
                 $userVideoLikeId[] = $userVideoId["videos_id"];
             }
 
-        }
-
-        // dd($userVideoLikeId);
-        
+        }        
 
         // La demande de requête a bien été envoyée pour effectuer la recherche
         if ($form->isSubmitted() && $form->isValid()) {

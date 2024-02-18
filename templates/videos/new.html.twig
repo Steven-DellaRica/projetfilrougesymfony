@@ -8,14 +8,12 @@
 {% endblock %}
 
 {% block body %}
-	<h1>Create new Videos</h1>
 
 	{% if partOne %}
 		{{ include('videos/_form.html.twig') }}
 	{% else %}
 		{{ include('videos/_formPart2.html.twig') }}
 	{% endif %}
-
 
 	<a href="{{ path('app_videopage') }}">Back to main page</a>
 {% endblock %}

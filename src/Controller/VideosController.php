@@ -20,7 +20,7 @@ class VideosController extends AbstractController
 {
     public function getYoutubeInfos(string $videoId)
     {
-        $apiKey = 'AIzaSyBCiw3CdxnZKQNx6MTOViqP4PXWNMDPCSA';
+        $apiKey = $this->getParameter('app.googleapi');
 
         $apiEndpoint = 'https://www.googleapis.com/youtube/v3/videos';
 
@@ -34,7 +34,12 @@ class VideosController extends AbstractController
         $response = file_get_contents($apiEndpoint . '?' . $query);
         $responseData = json_decode($response, true);
 
-        $videoSnippet = $responseData['items'][0];
+        //Check si l'id reçu est valide
+        if ($responseData['items']) {
+            $videoSnippet = $responseData['items'][0];
+        } else {
+            $videoSnippet = false;
+        }
 
         return $videoSnippet;
     }
@@ -90,24 +95,34 @@ class VideosController extends AbstractController
     #[Route('/new', name: 'app_videos_new', methods: ['GET', 'POST'])]
     public function new(Request $request, VideosRepository $videosRepository): Response
     {
+        //Set up des variables dont on a besoin
         $partOne = true;
         $errorBool = false;
         $errorMsg = '';
+
+        //On crée une nouvelle instance pour la vidéo que l'on va traiter et stocker
         $video = new Videos();
 
+        //On va chercher les vidéos déjà stockée dans notre BDD
         $videosStocked = $videosRepository->findAll();
 
+        //On crée notre Form pour récupérer nos informations
         $form = $this->createForm(VideoIDType::class, $video);
 
         $form->handleRequest($request);
 
+        //Check si tout va bien
         if ($form->isSubmitted() && $form->isValid()) {
 
+            //On nettoie l'input qu'on a reçu pour enlever les script ou tentatives d'injection SQL
             $url = UtilsService::cleanInput($request->request->all('video_id')['video_id']);
 
+            //On lance notre fonction qui va isoler l'id de la video
             $videoId = $this->getYoutubeIdFromUrl($url);
 
+            //Check si le lien est valide et plateforme reconnue
             if ($videoId !== false && $videoId !== '') {
+                //On check si la vidéo existe déjà dans la BDD
                 $duplicateId = false;
                 foreach ($videosStocked as $video => $value) {
 
@@ -117,18 +132,21 @@ class VideosController extends AbstractController
                 }
 
                 if ($duplicateId === true) {
+                    //La vidéo existe déjà
                     $errorBool = true;
                     $errorMsg = 'La vidéo existe déjà';
                 } else {
+                    //La vidéo n'existe pas dans la BDD, on passe à la suite
                     return $this->redirectToRoute('app_videos_new_tags', ['videoId' => $videoId], Response::HTTP_SEE_OTHER);
                 }
             } else {
-
+                //Scénario si le lien n'est pas valide
                 $errorBool = true;
                 $errorMsg = 'Le lien n\'est pas valide, ou la plateforme n\'est pas reconnue';
             }
         }
 
+        //Variable que l'on fait passer à notre page twig
         return $this->render('videos/new.html.twig', [
             'partOne' => $partOne,
             'errorBool' => $errorBool,
@@ -140,38 +158,56 @@ class VideosController extends AbstractController
     #[Route('/new/{videoId}', name: 'app_videos_new_tags', methods: ['GET', 'POST'])]
     public function newId(Request $request, EntityManagerInterface $entityManager, string $videoId): Response
     {
+        //Set up des variables dont on a besoin
         $partOne = false;
         $errorBool = false;
         $errorMsg = '';
-        $video = new Videos();
-        $user = $this->getUser();
 
+        //On crée une nouvelle instance pour la vidéo que l'on va traiter et stocker
+        $video = new Videos();
+        //On récupère l'utilisateur qui fait l'opération
+        $user = $this->getUser();
+        //On traite l'input qu'on a reçu pour enlever les script ou tentatives d'injection SQL
         $videoId = UtilsService::cleanInput($videoId);
 
-        $video->setVideoId($videoId);
+        //On lance notre fonction qui va récupérer les infos de la vidéo via la google API
         $videoInfos = $this->getYoutubeInfos($videoId);
-        $this->setYoutubeInfos($video, $videoInfos, $user);
 
-        $form = $this->createForm(VideoTagsType::class, $video);
+        //On vérifie si quelqu'un n'a pas mis n'importe quoi dans l'url
+        if (!$videoInfos) {
+            $errorBool = true;
+            $errorMsg = 'Cette vidéo n\'existe pas';
+        } else {
+            //On set la video id de notre instance
+            $video->setVideoId($videoId);
 
-        $form->handleRequest($request);
+            //On lance notre fonction qui va attribuer les infos récupérées à notre instance vidéo
+            $this->setYoutubeInfos($video, $videoInfos, $user);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+            //On crée notre formulaire qui va récupérer nos tags
+            $form = $this->createForm(VideoTagsType::class, $video);
 
+            $form->handleRequest($request);
+            //Check si tout se passe bien
+            if ($form->isSubmitted() && $form->isValid()) {
+                //On récupère les tags entré par l'utilisateur
+                $tags = $form->get('tags')->getData();
 
-            $tags = $form->get('tags')->getData();
+                //On attribut les tags à l'instance de la vidéo
+                for ($i = 0; $i < count($tags); $i++) {
+                    $video->addTag($tags[$i]);
+                }
 
-            for ($i = 0; $i < count($tags); $i++) {
-                $video->addTag($tags[$i]);
-            }
+                //On envoi notre vidéo à notre BDD pour la stocker
+                $entityManager->persist($video);
+                $entityManager->flush();
 
-            $entityManager->persist($video);
-            $entityManager->flush();
-
-            if ($user->getRoles() == "ROLE_ADMIN") {
-                return $this->redirectToRoute('app_videos_index', [], Response::HTTP_SEE_OTHER);
-            } else {
-                return $this->redirectToRoute('app_videopage', [], Response::HTTP_SEE_OTHER);
+                //On redirige l'utilisateur différemment selon si c'est l'admin ou non
+                if ($user->getRoles() == "ROLE_ADMIN") {
+                    return $this->redirectToRoute('app_videos_index', [], Response::HTTP_SEE_OTHER);
+                } else {
+                    return $this->redirectToRoute('app_videopage', [], Response::HTTP_SEE_OTHER);
+                }
             }
         }
 
