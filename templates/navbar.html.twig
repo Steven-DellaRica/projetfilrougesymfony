@@ -37,8 +37,8 @@
 			<div class="navbar-login">
 				{% if not is_granted('ROLE_USER') %}
 					<div class="navbar-connectbutton">
-						<a href="{{path('app_login')}}">Se Connecter</a>
-						<a href="{{path('app_register')}}">S'inscrire</a>
+						<a class="login-button" href="{{path('app_login')}}">Se Connecter</a>
+						<a class="signup-button" href="{{path('app_register')}}">S'inscrire</a>
 					</div>
 				{% else %}
 					<div class="navbar-connectbutton">
